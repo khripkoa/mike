@@ -1,0 +1,281 @@
+---
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import TestimonialCard from "../../../../components/TestimonialCard.astro";
+import CTASection from "../../../../components/CTASection.astro";
+import {
+    getAllZipCodes,
+    getCityBySlug,
+    getZipType,
+} from "../../../../data/locations.js";
+import { services } from "../../../../data/services.js";
+import {
+    getTestimonialsByService,
+    getAllTestimonials,
+} from "../../../../data/testimonials.js";
+import { getIntroText } from "../../../../data/zipTemplates.js";
+import { businessInfo } from "../../../../data/business.js";
+
+export async function getStaticPaths() {
+    const allZips = getAllZipCodes();
+    const paths = [];
+
+    allZips.forEach((zip) => {
+        services.forEach((service) => {
+            paths.push({
+                params: {
+                    city: zip.citySlug,
+                    zipcode: zip.code,
+                    service: service.slug,
+                },
+                props: {
+                    zipData: zip,
+                    service: service,
+                },
+            });
+        });
+    });
+
+    return paths;
+}
+
+const { zipData, service } = Astro.props;
+const { city, zipcode } = Astro.params;
+
+const cityData = getCityBySlug(city);
+
+// Safety check
+if (!cityData || cityData.isNeighborhood || !cityData.zipDetails) {
+    return Astro.redirect("/service-areas/");
+}
+
+const zipType = getZipType(city, zipcode);
+const zipDetail = cityData.zipDetails.find((z) => z.code === zipcode);
+
+if (!zipDetail) {
+    return Astro.redirect(`/${city}/`);
+}
+
+// Get service-specific testimonials, filtered by location
+const allTestimonials = getAllTestimonials();
+const serviceTestimonials = allTestimonials
+    .filter(
+        (t) =>
+            t.services.includes(service.slug) &&
+            (t.zipCode === zipcode ||
+                t.city === city ||
+                t.county === zipData.countySlug),
+    )
+    .slice(0, 3);
+
+// Fallback to general testimonials if no service-specific ones
+const locationTestimonials =
+    serviceTestimonials.length > 0
+        ? serviceTestimonials
+        : allTestimonials
+              .filter(
+                  (t) =>
+                      t.zipCode === zipcode ||
+                      t.city === city ||
+                      t.county === zipData.countySlug,
+              )
+              .slice(0, 3);
+
+const pageTitle = `${service.title} in ZIP ${zipcode}, ${zipData.city}, NC`;
+const metaDescription = `${service.metaDescription} Serving ZIP ${zipcode}. Call ${businessInfo.phone} for a free quote.`;
+---
+
+<BaseLayout
+    title={pageTitle}
+    description={metaDescription}
+    canonical={`/${city}/zip/${zipcode}/${service.slug}/`}
+>
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <nav class="breadcrumb">
+                <a href="/">Home</a>
+                <span>/</span>
+                <a href="/service-areas/">Service Areas</a>
+                <span>/</span>
+                <a href={cityData.isMain ? "/" : `/${city}/`}>{zipData.city}</a>
+                <span>/</span>
+                <a href={`/${city}/zip/${zipcode}/`}>ZIP {zipcode}</a>
+                <span>/</span>
+                <span>{service.shortTitle}</span>
+            </nav>
+            <h1>{service.title} in ZIP {zipcode}</h1>
+            <p>{zipData.city}, North Carolina</p>
+        </div>
+    </section>
+
+    <!-- Service Description -->
+    <section class="section">
+        <div class="container">
+            <div class="service-content">
+                <div class="service-main">
+                    <p
+                        style="font-size: 1.125rem; line-height: 1.8; color: var(--color-gray-700); margin-bottom: 2rem;"
+                    >
+                        Professional {service.shortTitle.toLowerCase()} services in
+                        ZIP {zipcode}.
+                        {service.description} Serving {
+                            zipDetail?.area || zipData.city
+                        } and surrounding areas.
+                    </p>
+
+                    <h2 style="margin-top: 2rem;">
+                        Our {service.shortTitle} Services
+                    </h2>
+                    <ul style="display: grid; gap: 0.75rem; margin-top: 1rem;">
+                        {
+                            service.services.map((s) => (
+                                <li style="display: flex; align-items: flex-start; gap: 0.5rem;">
+                                    <span style="color: var(--color-accent); font-weight: 700;">
+                                        ✓
+                                    </span>
+                                    <span>{s}</span>
+                                </li>
+                            ))
+                        }
+                    </ul>
+
+                    <div
+                        style="margin-top: 2.5rem; padding: 1.5rem; background: var(--color-gray-50); border-radius: 0.75rem; border-left: 4px solid var(--color-accent);"
+                    >
+                        <p
+                            style="margin: 0; font-weight: 600; color: var(--color-primary);"
+                        >
+                            Need {service.shortTitle.toLowerCase()} in ZIP {
+                                zipcode
+                            }?
+                        </p>
+                        <p
+                            style="margin: 0.5rem 0 0; color: var(--color-gray-700);"
+                        >
+                            Call {businessInfo.phone} for a free estimate. 7+ years
+                            of experience, background checked, same-day service often
+                            available.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Photo Gallery (if service has photos) -->
+    {
+        service.photos && service.photos.length > 0 && (
+            <section class="section bg-gray">
+                <div class="container">
+                    <h2 style="text-align: center; margin-bottom: 2rem;">
+                        Our {service.shortTitle} Work
+                    </h2>
+                    <p style="text-align: center; color: var(--color-gray-600); margin-bottom: 2.5rem;">
+                        Real photos from actual{" "}
+                        {service.shortTitle.toLowerCase()} projects
+                    </p>
+                    <div class="service-gallery">
+                        {service.photos.map((photo, index) => (
+                            <div class="gallery-item">
+                                <img
+                                    src={`/images/services/${photo}`}
+                                    alt={`${service.shortTitle} work example ${index + 1}`}
+                                    loading={index < 2 ? "eager" : "lazy"}
+                                    class="gallery-image"
+                                    data-lightbox="service-gallery"
+                                    data-lightbox-index={index}
+                                />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+        )
+    }
+
+    <!-- Testimonials -->
+    {
+        locationTestimonials.length > 0 && (
+            <section class="section">
+                <div class="container">
+                    <h2 style="text-align: center; margin-bottom: 2rem;">
+                        What Our Clients Say
+                    </h2>
+                    <div class="grid grid--2">
+                        {locationTestimonials.map((t) => (
+                            <TestimonialCard
+                                name={t.name}
+                                date={t.date}
+                                rating={t.rating}
+                                text={t.text}
+                                tags={t.tags}
+                                showImages={true}
+                                images={t.images}
+                                folder={t.folder}
+                            />
+                        ))}
+                    </div>
+                </div>
+            </section>
+        )
+    }
+
+    <!-- Service Area Note -->
+    <section class="section bg-gray">
+        <div class="container">
+            <p
+                style="text-align: center; font-size: 0.875rem; color: var(--color-gray-500);"
+            >
+                Serving all of ZIP {zipcode} and surrounding areas in {
+                    zipData.city
+                }, NC
+            </p>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <CTASection
+        title={`Ready for ${service.shortTitle} in ZIP ${zipcode}?`}
+        subtitle={`Call now for a free quote on ${service.shortTitle.toLowerCase()} services. Available 7 days a week.`}
+    />
+</BaseLayout>
+
+<style>
+    .service-content {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .service-gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .gallery-item {
+        position: relative;
+        overflow: hidden;
+        border-radius: 0.75rem;
+        box-shadow: var(--shadow-md);
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+
+    .gallery-item:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .gallery-image {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+        display: block;
+    }
+
+    @media (max-width: 640px) {
+        .service-gallery {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>

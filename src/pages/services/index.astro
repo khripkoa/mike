@@ -1,0 +1,104 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ServiceHero from "../../components/ServiceHero.astro";
+import ServiceCard from "../../components/ServiceCard.astro";
+import CTASection from "../../components/CTASection.astro";
+import { services } from "../../data/services.js";
+---
+
+<BaseLayout
+    title="All Handyman Services in Charlotte, NC"
+    description="Complete list of handyman services in Charlotte, NC. Door repair, drywall, cabinets, plumbing, electrical, painting, furniture assembly & more."
+    canonical="/services/"
+>
+    <!-- Service Hero -->
+    <ServiceHero
+        title="Professional Handyman Services"
+        subtitle="From small repairs to major installations, I handle it all with 7+ years of expertise. Clean work, fair prices, and friendly service guaranteed."
+        badge="⭐ 28 Five-Star Reviews • All Services • One Handyman"
+    />
+
+    <!-- All Services -->
+    <section class="section section--lg">
+        <div class="container">
+            <div class="grid grid--3">
+                {
+                    services.map((service) => (
+                        <ServiceCard
+                            slug={service.slug}
+                            icon={service.icon}
+                            title={service.title}
+                            shortTitle={service.shortTitle}
+                            description={service.description}
+                        />
+                    ))
+                }
+            </div>
+        </div>
+    </section>
+
+    <!-- What to Expect -->
+    <section class="section bg-gray">
+        <div class="container">
+            <div style="max-width: 800px; margin: 0 auto; text-align: center;">
+                <h2 style="margin-bottom: 2rem;">What to Expect</h2>
+
+                <div class="grid grid--3">
+                    <div
+                        class="card"
+                        style="padding: 2rem; text-align: center;"
+                    >
+                        <div style="font-size: 2.5rem; margin-bottom: 1rem;">
+                            💬
+                        </div>
+                        <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem;">
+                            Clear Communication
+                        </h3>
+                        <p
+                            style="margin: 0; color: var(--color-gray-600); font-size: 0.95rem;"
+                        >
+                            Upfront pricing with no hidden fees or surprises.
+                        </p>
+                    </div>
+
+                    <div
+                        class="card"
+                        style="padding: 2rem; text-align: center;"
+                    >
+                        <div style="font-size: 2.5rem; margin-bottom: 1rem;">
+                            🧹
+                        </div>
+                        <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem;">
+                            Clean Work
+                        </h3>
+                        <p
+                            style="margin: 0; color: var(--color-gray-600); font-size: 0.95rem;"
+                        >
+                            We leave your space as clean as we found it.
+                        </p>
+                    </div>
+
+                    <div
+                        class="card"
+                        style="padding: 2rem; text-align: center;"
+                    >
+                        <div style="font-size: 2.5rem; margin-bottom: 1rem;">
+                            ✅
+                        </div>
+                        <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem;">
+                            Quality Results
+                        </h3>
+                        <p
+                            style="margin: 0; color: var(--color-gray-600); font-size: 0.95rem;"
+                        >
+                            Done right the first time, every time.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <CTASection />
+</BaseLayout>

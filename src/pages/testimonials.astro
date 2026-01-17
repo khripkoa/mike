@@ -1,0 +1,219 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import TestimonialCard from "../components/TestimonialCard.astro";
+import CTASection from "../components/CTASection.astro";
+import { getAllTestimonials } from "../data/testimonials.js";
+import { businessInfo } from "../data/business.js";
+
+const testimonials = getAllTestimonials();
+
+// Create Review schema for all testimonials
+const reviewSchema = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "@id": "https://mike-handyman.com",
+    name: businessInfo.name,
+    aggregateRating: {
+        "@type": "AggregateRating",
+        ratingValue: "5",
+        reviewCount: testimonials.length.toString(),
+        bestRating: "5",
+        worstRating: "1",
+    },
+    review: testimonials.slice(0, 10).map((t) => ({
+        "@type": "Review",
+        author: {
+            "@type": "Person",
+            name: t.name,
+        },
+        datePublished: new Date(t.date).toISOString().split("T")[0],
+        reviewBody: t.text,
+        reviewRating: {
+            "@type": "Rating",
+            ratingValue: t.rating.toString(),
+            bestRating: "5",
+            worstRating: "1",
+        },
+    })),
+};
+---
+
+<style>
+    .personalized-header-wrapper {
+        position: relative;
+        margin-top: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    .header-title-centered {
+        text-align: center;
+    }
+    .header-title-centered h1 {
+        margin: 0 0 0.5rem;
+        font-size: 1.75rem;
+        color: white;
+    }
+    .header-title-centered p {
+        margin: 0;
+        color: rgba(255, 255, 255, 0.85);
+        font-size: 0.95rem;
+    }
+    .mike-section {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        max-width: 360px;
+        margin-top: 1.5rem;
+    }
+    @media (min-width: 768px) {
+        .header-title-centered {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 0;
+            z-index: 2;
+        }
+        .header-title-centered h1 {
+            font-size: 2rem;
+        }
+        .header-title-centered p {
+            font-size: 1rem;
+        }
+        .mike-section {
+            position: relative;
+            z-index: 1;
+            margin-top: 0;
+        }
+    }
+</style>
+
+<BaseLayout
+    title="Customer Reviews & Testimonials | Charlotte, NC"
+    description="Read what Charlotte homeowners are saying about Mike's Handyman Services. 5-star reviews from real customers. See why we're a Top Pro."
+    canonical="/testimonials/"
+    structuredData={reviewSchema}
+>
+    <!-- Page Header -->
+    <section
+        class="page-header"
+        style="padding: 2rem 0; background: linear-gradient(135deg, #1e3a5f 0%, #2c5282 100%); position: relative; overflow: hidden;"
+    >
+        <div class="container">
+            <nav class="breadcrumb" style="filter: brightness(2);">
+                <a href="/">Home</a>
+                <span>/</span>
+                <span>Reviews</span>
+            </nav>
+
+            <div class="personalized-header-wrapper">
+                <!-- Absolutely centered title -->
+                <div class="header-title-centered">
+                    <h1>Customer Reviews</h1>
+                    <p>Real feedback from real Charlotte homeowners</p>
+                </div>
+
+                <!-- Mike's section on left -->
+                <div class="mike-section">
+                    <div
+                        style="position: relative; width: 80px; height: 80px; flex-shrink: 0;"
+                    >
+                        <img
+                            src="/images/mike-hero.webp"
+                            alt="Mike"
+                            style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);"
+                        />
+                        <div
+                            style="position: absolute; bottom: -6px; right: -6px; background: var(--color-accent); color: white; padding: 0.2rem 0.4rem; border-radius: 3px; font-size: 0.7rem; font-weight: 600; box-shadow: 0 2px 8px rgba(0,0,0,0.2);"
+                        >
+                            ⭐ Pro
+                        </div>
+                    </div>
+                    <p
+                        style="margin: 0; color: rgba(255,255,255,0.9); font-size: 0.85rem; line-height: 1.3; text-align: left;"
+                    >
+                        <strong style="color: var(--color-accent);"
+                            >Mike here.</strong
+                        > These reviews mean everything to me. I work hard for every
+                        one.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats -->
+    <section class="section bg-gray">
+        <div class="container">
+            <div
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 2rem; text-align: center;"
+            >
+                <div>
+                    <div
+                        style="font-size: 3rem; font-weight: 800; color: var(--color-accent);"
+                    >
+                        ⭐⭐⭐⭐⭐
+                    </div>
+                    <div
+                        style="color: var(--color-gray-600); margin-top: 0.5rem;"
+                    >
+                        5-Star Average Rating
+                    </div>
+                </div>
+                <div>
+                    <div
+                        style="font-size: 3rem; font-weight: 800; color: var(--color-primary);"
+                    >
+                        {testimonials.length}+
+                    </div>
+                    <div
+                        style="color: var(--color-gray-600); margin-top: 0.5rem;"
+                    >
+                        Verified Reviews
+                    </div>
+                </div>
+                <div>
+                    <div
+                        style="font-size: 3rem; font-weight: 800; color: var(--color-success);"
+                    >
+                        100%
+                    </div>
+                    <div
+                        style="color: var(--color-gray-600); margin-top: 0.5rem;"
+                    >
+                        Satisfaction Rate
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- All Reviews -->
+    <section class="section section--lg">
+        <div class="container">
+            <div
+                style="display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 350px), 1fr)); gap: 2rem;"
+            >
+                {
+                    testimonials.map((t) => (
+                        <TestimonialCard
+                            name={t.name}
+                            date={t.date}
+                            rating={t.rating}
+                            text={t.text}
+                            tags={t.tags}
+                            duration={t.duration}
+                            images={t.images}
+                            folder={t.folder}
+                            showImages={true}
+                        />
+                    ))
+                }
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <CTASection
+        title="Ready to Experience 5-Star Service?"
+        subtitle="Join our happy customers. Call now for a free quote."
+    />
+</BaseLayout>

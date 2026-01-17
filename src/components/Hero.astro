@@ -1,0 +1,433 @@
+---
+import { businessInfo, getPhoneLink } from "../data/business.js";
+
+interface Props {
+  title?: string;
+  subtitle?: string;
+  showForm?: boolean;
+  showPhoto?: boolean;
+  location?: string;
+  service?: string;
+}
+
+const {
+  title = "Your Trusted Charlotte Handyman",
+  subtitle = "7+ years of hands-on experience. From furniture repairs and painting to drywall, plumbing, and electrical. Clean work. Clear prices. Friendly service.",
+  showForm = true,
+  showPhoto = true,
+  location,
+  service,
+} = Astro.props;
+
+const displayTitle = location
+  ? `Professional ${service || "Handyman"} in ${location}`
+  : service
+    ? `${service} Services in Charlotte, NC`
+    : title;
+---
+
+<section class="hero">
+  <div class="container hero__container">
+    <!-- Left: Content -->
+    <div class="hero__content">
+      <div class="hero__badge">
+        ⭐ Thumbtack Top Pro • 28 Five-Star Reviews • Background Checked
+      </div>
+
+      <h1 class="hero__title">
+        {displayTitle}
+        {
+          !location && !service && (
+            <span class="hero__title-accent">Done Right</span>
+          )
+        }
+      </h1>
+
+      <p class="hero__subtitle">{subtitle}</p>
+
+      <!-- Urgency Badge -->
+      <div class="hero__urgency" id="urgency-banner">
+        <span class="hero__urgency-icon">🔥</span>
+        <span id="urgency-message">Loading availability...</span>
+      </div>
+
+      <div class="hero__buttons">
+        <a href={getPhoneLink()} class="hero__phone-btn">
+          <span style="font-size: 1.5rem;">📞</span>
+          <span>Call {businessInfo.phone}</span>
+        </a>
+
+        <a href="/contact/" class="btn btn--secondary btn--lg hero__quote-btn">
+          Get Free Quote
+        </a>
+      </div>
+
+      <!-- Trust Badges -->
+      <div class="hero__trust-badges">
+        <div class="hero__trust-badge">
+          <span>✓</span>
+          <span>7+ Years Exp.</span>
+        </div>
+        <div class="hero__trust-badge">
+          <span>✓</span>
+          <span>Same-Day Available</span>
+        </div>
+        <div class="hero__trust-badge">
+          <span>✓</span>
+          <span>Background Checked</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Large Photo of Mike -->
+    <div class="hero__photo-section">
+      <div class="hero__photo-wrapper">
+        <picture>
+          <source srcset="/images/mike-hero.avif" type="image/avif" />
+          <source srcset="/images/mike-hero.webp" type="image/webp" />
+          <img
+            src="/images/mike-hero.webp"
+            alt="Mike - Your Charlotte Handyman"
+            class="hero__photo"
+            width="450"
+            height="550"
+            fetchpriority="high"
+            loading="eager"
+          />
+        </picture>
+        <div class="hero__photo-badge">⭐ Top Pro Since 2018</div>
+      </div>
+
+      <!-- Quick Contact Card under photo -->
+      <div class="hero__contact-card">
+        <div class="hero__contact-title">Ready to start?</div>
+        <a href={getPhoneLink()} class="hero__contact-phone">
+          📞 {businessInfo.phone}
+        </a>
+        <div class="hero__contact-hours">
+          {businessInfo.hours.days}, {businessInfo.hours.time}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(
+      135deg,
+      var(--color-primary) 0%,
+      var(--color-primary-dark) 100%
+    );
+    overflow: hidden;
+    padding: 6rem 0 3rem;
+  }
+
+  .hero__container {
+    display: grid;
+    gap: 2rem;
+    align-items: center;
+  }
+
+  @media (min-width: 1024px) {
+    .hero__container {
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+    }
+  }
+
+  .hero__content {
+    color: white;
+    text-align: center;
+    order: 2;
+  }
+
+  @media (min-width: 1024px) {
+    .hero__content {
+      text-align: left;
+      order: 1;
+    }
+  }
+
+  .hero__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 9999px;
+    padding: 0.5rem 1.25rem;
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+    backdrop-filter: blur(10px);
+  }
+
+  .hero__title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    color: white;
+  }
+
+  @media (min-width: 768px) {
+    .hero__title {
+      font-size: 3.25rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .hero__title {
+      font-size: 3.75rem;
+    }
+  }
+
+  .hero__title-accent {
+    color: var(--color-accent);
+  }
+
+  .hero__subtitle {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 2rem;
+    max-width: 500px;
+    line-height: 1.7;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  @media (min-width: 1024px) {
+    .hero__subtitle {
+      font-size: 1.2rem;
+      margin-left: 0;
+    }
+  }
+
+  .hero__buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  @media (min-width: 640px) {
+    .hero__buttons {
+      flex-direction: row;
+      justify-content: center;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .hero__buttons {
+      justify-content: flex-start;
+    }
+  }
+
+  .hero__phone-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    background: var(--color-accent);
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 0.75rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    box-shadow: 0 10px 25px rgba(255, 107, 53, 0.4);
+    transition: all 0.25s ease;
+  }
+
+  .hero__phone-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 35px rgba(255, 107, 53, 0.5);
+    background: #ff7d4a;
+  }
+
+  .hero__quote-btn {
+    background: transparent !important;
+    border: 2px solid white !important;
+    color: white !important;
+  }
+
+  .hero__quote-btn:hover {
+    background: white !important;
+    color: var(--color-primary) !important;
+  }
+
+  .hero__trust-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: center;
+  }
+
+  @media (min-width: 1024px) {
+    .hero__trust-badges {
+      justify-content: flex-start;
+    }
+  }
+
+  .hero__trust-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  /* Photo Section */
+  .hero__photo-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    order: 1;
+  }
+
+  @media (min-width: 1024px) {
+    .hero__photo-section {
+      order: 2;
+    }
+  }
+
+  .hero__photo-wrapper {
+    position: relative;
+  }
+
+  .hero__photo {
+    width: 280px;
+    height: 350px;
+    object-fit: cover;
+    border-radius: 1.5rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+    border: 4px solid rgba(255, 255, 255, 0.2);
+  }
+
+  @media (min-width: 768px) {
+    .hero__photo {
+      width: 350px;
+      height: 430px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .hero__photo {
+      width: 400px;
+      height: 500px;
+    }
+  }
+
+  .hero__photo-badge {
+    position: absolute;
+    bottom: -1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--color-accent);
+    color: white;
+    padding: 0.6rem 1.5rem;
+    border-radius: 9999px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    box-shadow: 0 4px 15px rgba(255, 107, 53, 0.5);
+  }
+
+  .hero__contact-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 1rem;
+    padding: 1.25rem 2rem;
+    text-align: center;
+    color: white;
+  }
+
+  .hero__contact-title {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    margin-bottom: 0.5rem;
+  }
+
+  .hero__contact-phone {
+    display: block;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 0.25rem;
+  }
+
+  .hero__contact-phone:hover {
+    color: var(--color-accent);
+  }
+
+  .hero__contact-hours {
+    font-size: 0.85rem;
+    opacity: 0.7;
+  }
+
+  /* Urgency Banner */
+  .hero__urgency {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 107, 53, 0.15);
+    border: 2px solid var(--color-accent);
+    border-radius: 0.75rem;
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    color: white;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%,
+    100% {
+      box-shadow: 0 0 0 0 rgba(255, 107, 53, 0.7);
+    }
+    50% {
+      box-shadow: 0 0 0 8px rgba(255, 107, 53, 0);
+    }
+  }
+
+  .hero__urgency-icon {
+    font-size: 1.2rem;
+  }
+</style>
+
+<script>
+  // Dynamic urgency messaging
+  import { getAvailableSlots } from "../utils/urgency.js";
+
+  function updateUrgency() {
+    const urgencyEl = document.getElementById("urgency-message");
+    if (!urgencyEl) return;
+
+    const { message, urgencyLevel } = getAvailableSlots();
+    urgencyEl.textContent = message;
+
+    const banner = document.getElementById("urgency-banner");
+    if (banner) {
+      banner.classList.remove("urgency-low", "urgency-medium", "urgency-high");
+      banner.classList.add(`urgency-${urgencyLevel}`);
+    }
+  }
+
+  // Update on page load
+  document.addEventListener("DOMContentLoaded", updateUrgency);
+
+  // Update every 5 minutes
+  setInterval(updateUrgency, 5 * 60 * 1000);
+
+  // For Astro view transitions
+  document.addEventListener("astro:page-load", updateUrgency);
+</script>

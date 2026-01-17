@@ -1,0 +1,219 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import CTASection from "../components/CTASection.astro";
+import { locations } from "../data/locations.js";
+import { services } from "../data/services.js";
+---
+
+<style>
+    .personalized-header-wrapper {
+        position: relative;
+        margin-top: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    .header-title-centered {
+        text-align: center;
+    }
+    .header-title-centered h1 {
+        margin: 0 0 0.5rem;
+        font-size: 1.75rem;
+        color: white;
+    }
+    .header-title-centered p {
+        margin: 0;
+        color: rgba(255, 255, 255, 0.85);
+        font-size: 0.95rem;
+    }
+    .mike-section {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        max-width: 360px;
+        margin-top: 1.5rem;
+    }
+    @media (min-width: 768px) {
+        .header-title-centered {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 0;
+            z-index: 2;
+        }
+        .header-title-centered h1 {
+            font-size: 2rem;
+        }
+        .header-title-centered p {
+            font-size: 1rem;
+        }
+        .mike-section {
+            position: relative;
+            z-index: 1;
+            margin-top: 0;
+        }
+    }
+</style>
+
+<BaseLayout
+    title="Service Areas"
+    description="Mike's Handyman services Charlotte, NC and surrounding areas within a 50-mile radius. Mecklenburg, Gaston, Union, and Cabarrus counties."
+    canonical="/service-areas/"
+>
+    <!-- Page Header -->
+    <section
+        class="page-header"
+        style="padding: 2rem 0; background: linear-gradient(135deg, #1e3a5f 0%, #2c5282 100%); position: relative; overflow: hidden;"
+    >
+        <div class="container">
+            <nav class="breadcrumb" style="filter: brightness(2);">
+                <a href="/">Home</a>
+                <span>/</span>
+                <span>Service Areas</span>
+            </nav>
+
+            <div class="personalized-header-wrapper">
+                <!-- Absolutely centered title -->
+                <div class="header-title-centered">
+                    <div style="text-align: center;">
+                        <h1>Areas We Serve</h1>
+                        <p>
+                            Professional handyman services within 50 miles of
+                            Charlotte, NC
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Mike's section on left -->
+                <div class="mike-section">
+                    <div
+                        style="position: relative; width: 80px; height: 80px; flex-shrink: 0;"
+                    >
+                        <img
+                            src="/images/mike-hero.webp"
+                            alt="Mike"
+                            style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);"
+                        />
+                        <div
+                            style="position: absolute; bottom: -6px; right: -6px; background: var(--color-accent); color: white; padding: 0.2rem 0.4rem; border-radius: 3px; font-size: 0.7rem; font-weight: 600; box-shadow: 0 2px 8px rgba(0,0,0,0.2);"
+                        >
+                            ⭐ Pro
+                        </div>
+                    </div>
+                    <p
+                        style="margin: 0; color: rgba(255,255,255,0.9); font-size: 0.85rem; line-height: 1.3; text-align: left;"
+                    >
+                        <strong style="color: var(--color-accent);"
+                            >Mike here.</strong
+                        > I cover all these areas personally. No subcontractors, just
+                        me.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Service Areas Grid -->
+    <section class="section section--lg">
+        <div class="container">
+            <div class="areas-grid">
+                {
+                    locations.counties.map((county) => (
+                        <div class="area-card">
+                            <h2 class="area-card__title">{county.name}</h2>
+                            <ul
+                                class="area-card__list"
+                                style="grid-template-columns: repeat(2, 1fr);"
+                            >
+                                {county.cities.map((city) => (
+                                    <li>
+                                        <a
+                                            href={
+                                                city.isMain
+                                                    ? "/"
+                                                    : `/${city.slug}/`
+                                            }
+                                            class="area-card__link"
+                                        >
+                                            {city.name}
+                                        </a>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    ))
+                }
+            </div>
+        </div>
+    </section>
+
+    <!-- Charlotte Neighborhoods -->
+    <section class="section bg-gray">
+        <div class="container">
+            <div style="text-align: center; margin-bottom: 3rem;">
+                <h2>Charlotte Neighborhoods</h2>
+                <p style="color: var(--color-gray-600);">
+                    We serve all Charlotte neighborhoods including:
+                </p>
+            </div>
+
+            <div
+                style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center;"
+            >
+                {
+                    locations.neighborhoods.map((n) => (
+                        <a
+                            href={`/${n.slug}/`}
+                            class="badge badge--primary"
+                            style="padding: 0.75rem 1.25rem; font-size: 1rem;"
+                        >
+                            {n.name}
+                        </a>
+                    ))
+                }
+            </div>
+        </div>
+    </section>
+
+    <!-- Services by Area -->
+    <section class="section">
+        <div class="container">
+            <div style="text-align: center; margin-bottom: 3rem;">
+                <h2>Services Available in All Areas</h2>
+                <p style="color: var(--color-gray-600);">
+                    Every location we serve gets access to our full range of
+                    handyman services.
+                </p>
+            </div>
+
+            <div class="grid grid--3">
+                {
+                    services.slice(0, 9).map((service) => (
+                        <a
+                            href={`/services/${service.slug}/`}
+                            class="card"
+                            style="padding: 1.5rem; text-align: center; text-decoration: none; color: inherit; transition: all 0.3s ease;"
+                        >
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">
+                                {service.icon}
+                            </div>
+                            <h3 style="font-size: 1.125rem; margin-bottom: 0;">
+                                {service.shortTitle}
+                            </h3>
+                        </a>
+                    ))
+                }
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <a href="/services/" class="btn btn--secondary"
+                    >View All Services →</a
+                >
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <CTASection
+        title="Need a Handyman in Your Area?"
+        subtitle="We come to you! Call now for a free quote."
+    />
+</BaseLayout>

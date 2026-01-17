@@ -1,0 +1,436 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import CTASection from "../components/CTASection.astro";
+import { businessInfo, getPhoneLink, getEmailLink } from "../data/business.js";
+---
+
+<BaseLayout
+    title="About Mike - Charlotte, NC Handyman"
+    description="Meet Mike - Charlotte's trusted handyman with 7+ years of experience. Learn about his background, skills, and approach to home repairs and improvements."
+    canonical="/about/"
+>
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <nav class="breadcrumb">
+                <a href="/">Home</a>
+                <span>/</span>
+                <span>About</span>
+            </nav>
+            <h1>About Mike</h1>
+            <p>Your Trusted Charlotte Handyman</p>
+        </div>
+    </section>
+
+    <!-- About Content -->
+    <section class="section section--lg">
+        <div class="container">
+            <div class="about-intro">
+                <!-- Photo Column -->
+                <div class="about-photo-col">
+                    <div class="about-photo-wrapper">
+                        <img
+                            src="/images/mike-hero.webp"
+                            alt="Mike - Your Charlotte Handyman"
+                            class="about-photo"
+                            loading="eager"
+                            fetchpriority="high"
+                        />
+                        <div class="about-photo-badge">
+                            ⭐ Top Pro Since 2018
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Text Column -->
+                <div class="about-text-col">
+                    <h2 class="about-name">Hi, I'm Mike!</h2>
+                    <p class="about-tagline">Your Trusted Charlotte Handyman</p>
+
+                    <p class="about-intro-text">
+                        {businessInfo.about.short}
+                    </p>
+
+                    <p class="about-intro-text">
+                        {businessInfo.about.long}
+                    </p>
+
+                    <div class="about-highlights">
+                        <div class="about-highlight">
+                            <span class="about-highlight-icon">🔧</span>
+                            <div>
+                                <strong>7+ Years Experience</strong>
+                                <span>Hands-on expertise</span>
+                            </div>
+                        </div>
+                        <div class="about-highlight">
+                            <span class="about-highlight-icon">⭐</span>
+                            <div>
+                                <strong>Top Pro Status</strong>
+                                <span>Verified & trusted</span>
+                            </div>
+                        </div>
+                        <div class="about-highlight">
+                            <span class="about-highlight-icon">✓</span>
+                            <div>
+                                <strong>Background Checked</strong>
+                                <span>Your safety first</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1.5rem; margin: 3rem 0;"
+            >
+                <div
+                    style="text-align: center; padding: 1.5rem; background: var(--color-gray-50); border-radius: 1rem;"
+                >
+                    <div
+                        style="font-size: 2.5rem; font-weight: 800; color: var(--color-accent);"
+                    >
+                        7+
+                    </div>
+                    <div style="color: var(--color-gray-600);">
+                        Years Experience
+                    </div>
+                </div>
+                <div
+                    style="text-align: center; padding: 1.5rem; background: var(--color-gray-50); border-radius: 1rem;"
+                >
+                    <div
+                        style="font-size: 2.5rem; font-weight: 800; color: var(--color-accent);"
+                    >
+                        32+
+                    </div>
+                    <div style="color: var(--color-gray-600);">
+                        Jobs Completed
+                    </div>
+                </div>
+                <div
+                    style="text-align: center; padding: 1.5rem; background: var(--color-gray-50); border-radius: 1rem;"
+                >
+                    <div
+                        style="font-size: 2.5rem; font-weight: 800; color: var(--color-accent);"
+                    >
+                        50
+                    </div>
+                    <div style="color: var(--color-gray-600);">Mile Radius</div>
+                </div>
+                <div
+                    style="text-align: center; padding: 1.5rem; background: var(--color-gray-50); border-radius: 1rem;"
+                >
+                    <div
+                        style="font-size: 2.5rem; font-weight: 800; color: var(--color-accent);"
+                    >
+                        ⭐
+                    </div>
+                    <div style="color: var(--color-gray-600);">
+                        Top Pro Status
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Who I Work With -->
+    <section class="section bg-gray">
+        <div class="container">
+            <div style="max-width: 800px; margin: 0 auto;">
+                <h2 style="text-align: center; margin-bottom: 1.5rem;">
+                    Who I Work With
+                </h2>
+                <p
+                    style="text-align: center; font-size: 1.125rem; line-height: 1.8; color: var(--color-gray-700);"
+                >
+                    {businessInfo.about.customers}
+                </p>
+
+                <div
+                    style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin-top: 2rem;"
+                >
+                    <span
+                        class="badge badge--primary"
+                        style="padding: 0.75rem 1.25rem; font-size: 1rem;"
+                        >🏠 Homeowners</span
+                    >
+                    <span
+                        class="badge badge--primary"
+                        style="padding: 0.75rem 1.25rem; font-size: 1rem;"
+                        >🔑 Renters</span
+                    >
+                    <span
+                        class="badge badge--primary"
+                        style="padding: 0.75rem 1.25rem; font-size: 1rem;"
+                        >🏢 Realtors</span
+                    >
+                    <span
+                        class="badge badge--primary"
+                        style="padding: 0.75rem 1.25rem; font-size: 1rem;"
+                        >📦 Landlords</span
+                    >
+                    <span
+                        class="badge badge--primary"
+                        style="padding: 0.75rem 1.25rem; font-size: 1rem;"
+                        >🏨 Airbnb Hosts</span
+                    >
+                    <span
+                        class="badge badge--primary"
+                        style="padding: 0.75rem 1.25rem; font-size: 1rem;"
+                        >👨‍👩‍👧‍👦 Busy Families</span
+                    >
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- My Approach -->
+    <section class="section">
+        <div class="container">
+            <div style="max-width: 800px; margin: 0 auto;">
+                <h2 style="text-align: center; margin-bottom: 2rem;">
+                    How I Work
+                </h2>
+
+                <div style="display: grid; gap: 2rem;">
+                    <div
+                        class="card"
+                        style="padding: 2rem; display: flex; gap: 1.5rem; align-items: flex-start;"
+                    >
+                        <div style="font-size: 2rem; flex-shrink: 0;">1️⃣</div>
+                        <div>
+                            <h3 style="margin-bottom: 0.5rem;">
+                                Tell Me What You Need
+                            </h3>
+                            <p style="margin: 0; color: var(--color-gray-600);">
+                                You tell me what needs doing — pictures help!
+                                I'll give you a quick idea of time and cost.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div
+                        class="card"
+                        style="padding: 2rem; display: flex; gap: 1.5rem; align-items: flex-start;"
+                    >
+                        <div style="font-size: 2rem; flex-shrink: 0;">2️⃣</div>
+                        <div>
+                            <h3 style="margin-bottom: 0.5rem;">
+                                Get a Clear Quote
+                            </h3>
+                            <p style="margin: 0; color: var(--color-gray-600);">
+                                No hidden fees, no pressure. Just honest work
+                                for a fair rate. 2-hour minimum per visit.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div
+                        class="card"
+                        style="padding: 2rem; display: flex; gap: 1.5rem; align-items: flex-start;"
+                    >
+                        <div style="font-size: 2rem; flex-shrink: 0;">3️⃣</div>
+                        <div>
+                            <h3 style="margin-bottom: 0.5rem;">
+                                Schedule & Get It Done
+                            </h3>
+                            <p style="margin: 0; color: var(--color-gray-600);">
+                                If it all sounds good, we pick a time and get it
+                                done. Simple as that.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- My Advice -->
+    <section class="section bg-gray">
+        <div class="container">
+            <div style="max-width: 800px; margin: 0 auto; text-align: center;">
+                <h2 style="margin-bottom: 1.5rem;">My Advice to Homeowners</h2>
+                <blockquote
+                    style="font-size: 1.25rem; font-style: italic; color: var(--color-gray-700); line-height: 1.8; padding: 2rem; background: white; border-radius: 1rem; box-shadow: var(--shadow-md);"
+                >
+                    "{businessInfo.about.advice}"
+                </blockquote>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Info -->
+    <section class="section">
+        <div class="container">
+            <div style="max-width: 600px; margin: 0 auto; text-align: center;">
+                <h2 style="margin-bottom: 2rem;">Get In Touch</h2>
+
+                <div style="display: grid; gap: 1.5rem;">
+                    <a
+                        href={getPhoneLink()}
+                        style="display: flex; align-items: center; justify-content: center; gap: 1rem; padding: 1.5rem; background: var(--color-gray-50); border-radius: 1rem; font-size: 1.25rem; transition: all 0.2s;"
+                    >
+                        <span style="font-size: 1.5rem;">📞</span>
+                        <span style="font-weight: 600;"
+                            >{businessInfo.phone}</span
+                        >
+                    </a>
+
+                    <a
+                        href={getEmailLink()}
+                        style="display: flex; align-items: center; justify-content: center; gap: 1rem; padding: 1.5rem; background: var(--color-gray-50); border-radius: 1rem; font-size: 1.25rem; transition: all 0.2s;"
+                    >
+                        <span style="font-size: 1.5rem;">📧</span>
+                        <span style="font-weight: 600;"
+                            >{businessInfo.email}</span
+                        >
+                    </a>
+
+                    <div
+                        style="display: flex; align-items: center; justify-content: center; gap: 1rem; padding: 1.5rem; background: var(--color-gray-50); border-radius: 1rem; font-size: 1.125rem;"
+                    >
+                        <span style="font-size: 1.5rem;">📍</span>
+                        <span>{businessInfo.address.full}</span>
+                    </div>
+
+                    <div
+                        style="display: flex; align-items: center; justify-content: center; gap: 1rem; padding: 1.5rem; background: var(--color-gray-50); border-radius: 1rem; font-size: 1.125rem;"
+                    >
+                        <span style="font-size: 1.5rem;">🕐</span>
+                        <span
+                            >{businessInfo.hours.days}, {
+                                businessInfo.hours.time
+                            }</span
+                        >
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <CTASection />
+</BaseLayout>
+
+<style>
+    .about-intro {
+        display: grid;
+        gap: 3rem;
+        align-items: center;
+    }
+
+    @media (min-width: 1024px) {
+        .about-intro {
+            grid-template-columns: 350px 1fr;
+            gap: 4rem;
+        }
+    }
+
+    .about-photo-col {
+        display: flex;
+        justify-content: center;
+    }
+
+    .about-photo-wrapper {
+        position: relative;
+    }
+
+    .about-photo {
+        width: 280px;
+        height: 350px;
+        object-fit: cover;
+        border-radius: 1.5rem;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+
+    @media (min-width: 1024px) {
+        .about-photo {
+            width: 320px;
+            height: 400px;
+        }
+    }
+
+    .about-photo-badge {
+        position: absolute;
+        bottom: -1rem;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--color-accent);
+        color: white;
+        padding: 0.6rem 1.5rem;
+        border-radius: 9999px;
+        font-weight: 700;
+        font-size: 0.9rem;
+        white-space: nowrap;
+        box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+    }
+
+    .about-text-col {
+        text-align: center;
+    }
+
+    @media (min-width: 1024px) {
+        .about-text-col {
+            text-align: left;
+        }
+    }
+
+    .about-name {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin: 0 0 0.5rem 0;
+        color: var(--color-primary);
+    }
+
+    .about-tagline {
+        color: var(--color-accent);
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin: 0 0 2rem 0;
+    }
+
+    .about-intro-text {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: var(--color-gray-700);
+        margin-bottom: 1.5rem;
+    }
+
+    .about-highlights {
+        display: grid;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    @media (min-width: 640px) {
+        .about-highlights {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    .about-highlight {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 1rem;
+        background: var(--color-gray-50);
+        border-radius: 0.75rem;
+    }
+
+    .about-highlight-icon {
+        font-size: 1.5rem;
+    }
+
+    .about-highlight strong {
+        display: block;
+        font-size: 0.95rem;
+        color: var(--color-primary);
+    }
+
+    .about-highlight span {
+        font-size: 0.85rem;
+        color: var(--color-gray-500);
+    }
+</style>

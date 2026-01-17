@@ -1,0 +1,265 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Hero from "../components/Hero.astro";
+import ServiceCard from "../components/ServiceCard.astro";
+import TestimonialCard from "../components/TestimonialCard.astro";
+import CTASection from "../components/CTASection.astro";
+import { services } from "../data/services.js";
+import {
+    getAllCities,
+    getAllNeighborhoods,
+    getCityBySlug,
+} from "../data/locations.js";
+import { getFeaturedTestimonials } from "../data/testimonials.js";
+import { businessInfo } from "../data/business.js";
+import { getWhyChooseUsForCity } from "../data/cityVariations.js";
+
+export function getStaticPaths() {
+    const cities = getAllCities();
+    const neighborhoods = getAllNeighborhoods();
+
+    const cityPaths = cities.map((city) => ({
+        params: { city: city.slug },
+        props: {
+            location: city,
+            isNeighborhood: false,
+        },
+    }));
+
+    const neighborhoodPaths = neighborhoods.map((n) => ({
+        params: { city: n.slug },
+        props: {
+            location: { ...n, name: n.name },
+            isNeighborhood: true,
+        },
+    }));
+
+    return [...cityPaths, ...neighborhoodPaths];
+}
+
+const { location, isNeighborhood } = Astro.props;
+const testimonials = getFeaturedTestimonials(2);
+const featuredServices = services.slice(0, 6);
+
+const locationName = location.name;
+const countyName = location.county || "Charlotte Area";
+
+// Get unique "Why Choose Us" content for this city
+const whyChooseUs = getWhyChooseUsForCity(locationName);
+
+const schemaData = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    name: `${businessInfo.name} - ${locationName}`,
+    description: `Professional handyman services in ${locationName}. ${businessInfo.about.short}`,
+    telephone: businessInfo.phone,
+    email: businessInfo.email,
+    areaServed: {
+        "@type": isNeighborhood ? "Neighborhood" : "City",
+        name: locationName,
+    },
+};
+---
+
+<BaseLayout
+    title={`Handyman Services in ${locationName}`}
+    description={`Professional handyman in ${locationName}. Door repair, drywall, painting, plumbing, electrical, furniture assembly & more. 7+ years experience. Call ${businessInfo.phone} for a free quote.`}
+    canonical={`/${location.slug}/`}
+    structuredData={schemaData}
+>
+    <!-- Hero -->
+    <Hero
+        title={`Your Trusted Handyman in ${locationName}`}
+        subtitle={`Professional home repairs and improvements for ${locationName} homeowners. 7+ years experience, background checked, and rated a Top Pro.`}
+        showForm={true}
+        location={locationName}
+    />
+
+    <!-- Services in this location -->
+    <section class="section section--lg bg-gray">
+        <div class="container">
+            <div class="section__header">
+                <span class="section__label"
+                    >Our Services in {locationName}</span
+                >
+                <h2 class="section__title">What We Can Do For You</h2>
+                <p class="section__subtitle">
+                    Full range of handyman services available in {locationName} and
+                    surrounding areas.
+                </p>
+            </div>
+
+            <div class="grid grid--3">
+                {
+                    featuredServices.map((service) => (
+                        <ServiceCard
+                            slug={service.slug}
+                            icon={service.icon}
+                            title={service.title}
+                            shortTitle={service.shortTitle}
+                            description={service.description}
+                            location={location.slug}
+                        />
+                    ))
+                }
+            </div>
+
+            <div style="text-align: center; margin-top: 3rem;">
+                <a href="/services/" class="btn btn--secondary btn--lg">
+                    View All Services →
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ZIP Codes Section (only for cities with zipDetails) -->
+    {
+        !isNeighborhood &&
+            location.zipDetails &&
+            location.zipDetails.length > 0 && (
+                <section class="section">
+                    <div class="container">
+                        <div class="section__header">
+                            <span class="section__label">
+                                Serving Your Neighborhood
+                            </span>
+                            <h2 class="section__title">
+                                Service by ZIP Code in {locationName}
+                            </h2>
+                            <p class="section__subtitle">
+                                Click your ZIP code to see services and info
+                                specific to your area
+                            </p>
+                        </div>
+
+                        <div style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; max-width: 900px; margin: 0 auto;">
+                            {location.zipDetails.map((zip) => (
+                                <a
+                                    href={`/${location.slug}/zip/${zip.code}/`}
+                                    class="card"
+                                    style="padding: 1.25rem 1.5rem; text-decoration: none; display: flex; flex-direction: column; gap: 0.5rem; min-width: 140px; transition: transform 0.2s, box-shadow 0.2s;"
+                                >
+                                    <div style="font-size: 1.5rem; font-weight: 700; color: var(--color-primary);">
+                                        {zip.code}
+                                    </div>
+                                    <div style="font-size: 0.875rem; color: var(--color-gray-600);">
+                                        {zip.area}
+                                    </div>
+                                    <div style="font-size: 0.75rem; color: var(--color-accent); font-weight: 600; text-transform: uppercase;">
+                                        {zip.type === "condo"
+                                            ? "🏢 Condos"
+                                            : zip.type === "house"
+                                              ? "🏡 Houses"
+                                              : "🏘️ Mixed"}
+                                    </div>
+                                </a>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            )
+    }
+
+    <!-- Why Choose Us for this location -->
+    <section class="section">
+        <div class="container">
+            <div style="max-width: 800px; margin: 0 auto;">
+                <h2 style="text-align: center; margin-bottom: 2rem;">
+                    Why {locationName} Homeowners Choose Us
+                </h2>
+
+                <div class="grid grid--2">
+                    {
+                        whyChooseUs.map((item) => (
+                            <div
+                                class="card"
+                                style="padding: 1.5rem; display: flex; gap: 1rem; align-items: flex-start;"
+                            >
+                                <div style="font-size: 2rem;">{item.icon}</div>
+                                <div>
+                                    <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem;">
+                                        {item.title}
+                                    </h3>
+                                    <p style="margin: 0; color: var(--color-gray-600); font-size: 0.95rem;">
+                                        {item.description}
+                                    </p>
+                                </div>
+                            </div>
+                        ))
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    {
+        testimonials.length > 0 && (
+            <section class="section bg-gray">
+                <div class="container">
+                    <h2 style="text-align: center; margin-bottom: 2rem;">
+                        What Clients Say
+                    </h2>
+                    <div class="grid grid--2">
+                        {testimonials.map((t) => (
+                            <TestimonialCard
+                                name={t.name}
+                                date={t.date}
+                                rating={t.rating}
+                                text={
+                                    t.text.length > 250
+                                        ? t.text.substring(0, 250) + "..."
+                                        : t.text
+                                }
+                                tags={t.tags}
+                            />
+                        ))}
+                    </div>
+                    <div style="text-align: center; margin-top: 2rem;">
+                        <a href="/testimonials/" class="btn btn--secondary">
+                            Read All Reviews →
+                        </a>
+                    </div>
+                </div>
+            </section>
+        )
+    }
+
+    <!-- All Services Links -->
+    <section class="section">
+        <div class="container">
+            <h2 style="text-align: center; margin-bottom: 1rem;">
+                All Services in {locationName}
+            </h2>
+            <p
+                style="text-align: center; color: var(--color-gray-600); margin-bottom: 2rem;"
+            >
+                Click any service to learn more about what we offer in {
+                    locationName
+                }:
+            </p>
+
+            <div
+                style="display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center;"
+            >
+                {
+                    services.map((service) => (
+                        <a
+                            href={`/${location.slug}/${service.slug}/`}
+                            class="badge badge--primary"
+                            style="padding: 0.5rem 1rem;"
+                        >
+                            {service.icon} {service.shortTitle}
+                        </a>
+                    ))
+                }
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <CTASection
+        title={`Need a Handyman in ${locationName}?`}
+        subtitle="Call now for a free quote. Same-day appointments often available."
+    />
+</BaseLayout>

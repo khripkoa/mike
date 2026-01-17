@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Telegram Test</title>
+</head>
+<body>
+    <h1>Test Telegram Integration</h1>
+    <button id="testBtn">Send Test Message</button>
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('testBtn').addEventListener('click', async () => {
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = 'Sending...';
+
+            try {
+                const data = {
+                    name: "Test User",
+                    phone: "(555) 123-4567",
+                    email: "test@example.com",
+                    service: "Door Repair",
+                    message: "This is a test submission from deployed site",
+                    source: "Test Page"
+                };
+
+                const response = await fetch('/.netlify/functions/send-telegram', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                
+                if(response.ok) {
+                    resultDiv.style.color = 'green';
+                    resultDiv.textContent = 'SUCCESS! Check Telegram. Response: ' + JSON.stringify(result);
+                } else {
+                    throw new Error(JSON.stringify(result));
+                }
+            } catch (error) {
+                resultDiv.style.color = 'red';
+                resultDiv.textContent = 'ERROR: ' + error.message;
+            }
+        });
+    </script>
+</body>
+</html>

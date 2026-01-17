@@ -1,0 +1,537 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import CTASection from "../components/CTASection.astro";
+import { businessInfo, getPhoneLink, getEmailLink } from "../data/business.js";
+import { services } from "../data/services.js";
+---
+
+<style>
+    .personalized-header-wrapper {
+        position: relative;
+        margin-top: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    .header-title-centered {
+        text-align: center;
+    }
+    .header-title-centered h1 {
+        margin: 0 0 0.5rem;
+        font-size: 1.75rem;
+        color: white;
+    }
+    .header-title-centered p {
+        margin: 0;
+        color: rgba(255, 255, 255, 0.85);
+        font-size: 0.95rem;
+    }
+    .mike-section {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        max-width: 360px;
+        margin-top: 1.5rem;
+    }
+    @media (min-width: 768px) {
+        .header-title-centered {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 0;
+            z-index: 2;
+        }
+        .header-title-centered h1 {
+            font-size: 2rem;
+        }
+        .header-title-centered p {
+            font-size: 1rem;
+        }
+        .mike-section {
+            position: relative;
+            z-index: 1;
+            margin-top: 0;
+        }
+    }
+</style>
+
+<BaseLayout
+    title="Contact Us - Charlotte, NC"
+    description="Get in touch with Mike's Handyman Services. Call (704) 111-1111 for a free quote. Serving Charlotte, NC and surrounding areas."
+    canonical="/contact/"
+>
+    <!-- Page Header -->
+    <section
+        class="page-header"
+        style="padding: 2rem 0; background: linear-gradient(135deg, #1e3a5f 0%, #2c5282 100%); position: relative; overflow: hidden;"
+    >
+        <div class="container">
+            <nav class="breadcrumb" style="filter: brightness(2);">
+                <a href="/">Home</a>
+                <span>/</span>
+                <span>Contact</span>
+            </nav>
+
+            <div class="personalized-header-wrapper">
+                <div class="header-title-centered">
+                    <h1>Contact Us</h1>
+                    <p>Get a free quote for your project today</p>
+                </div>
+
+                <!-- Mike's section on left -->
+                <div class="mike-section">
+                    <div
+                        style="position: relative; width: 80px; height: 80px; flex-shrink: 0;"
+                    >
+                        <img
+                            src="/images/mike-hero.webp"
+                            alt="Mike"
+                            style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);"
+                        />
+                        <div
+                            style="position: absolute; bottom: -6px; right: -6px; background: var(--color-accent); color: white; padding: 0.2rem 0.4rem; border-radius: 3px; font-size: 0.7rem; font-weight: 600; box-shadow: 0 2px 8px rgba(0,0,0,0.2);"
+                        >
+                            ⭐ Pro
+                        </div>
+                    </div>
+                    <p
+                        style="margin: 0; color: rgba(255,255,255,0.9); font-size: 0.85rem; line-height: 1.3; text-align: left;"
+                    >
+                        <strong style="color: var(--color-accent);"
+                            >Mike here.</strong
+                        > I answer every call and message personally. Let's talk about
+                        your project.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="section section--lg">
+        <div class="container">
+            <div style="display: grid; gap: 4rem;">
+                <div style="max-width: 1000px; margin: 0 auto; width: 100%;">
+                    <!-- On desktop, this becomes 2 columns -->
+                    <style>
+                        @media (min-width: 768px) {
+                            .contact-grid {
+                                grid-template-columns: repeat(
+                                    2,
+                                    1fr
+                                ) !important;
+                            }
+                        }
+                    </style>
+                    <div
+                        class="contact-grid"
+                        style="display: grid; gap: 3rem; grid-template-columns: 1fr;"
+                    >
+                        <!-- Contact Info -->
+                        <div>
+                            <h2 style="margin-bottom: 2rem;">Get In Touch</h2>
+
+                            <div style="display: grid; gap: 1.5rem;">
+                                <a
+                                    href={getPhoneLink()}
+                                    class="card"
+                                    style="padding: 1.5rem; display: flex; align-items: center; gap: 1rem;"
+                                >
+                                    <div
+                                        style="width: 56px; height: 56px; background: var(--color-accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;"
+                                    >
+                                        📞
+                                    </div>
+                                    <div>
+                                        <div
+                                            style="font-size: 0.875rem; color: var(--color-gray-500);"
+                                        >
+                                            Phone
+                                        </div>
+                                        <div
+                                            style="font-size: 1.25rem; font-weight: 600;"
+                                        >
+                                            {businessInfo.phone}
+                                        </div>
+                                    </div>
+                                </a>
+
+                                <a
+                                    href={getEmailLink()}
+                                    class="card"
+                                    style="padding: 1.5rem; display: flex; align-items: center; gap: 1rem;"
+                                >
+                                    <div
+                                        style="width: 56px; height: 56px; background: var(--color-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;"
+                                    >
+                                        📧
+                                    </div>
+                                    <div>
+                                        <div
+                                            style="font-size: 0.875rem; color: var(--color-gray-500);"
+                                        >
+                                            Email
+                                        </div>
+                                        <div
+                                            style="font-size: 1.25rem; font-weight: 600;"
+                                        >
+                                            {businessInfo.email}
+                                        </div>
+                                    </div>
+                                </a>
+
+                                <div
+                                    class="card"
+                                    style="padding: 1.5rem; display: flex; align-items: center; gap: 1rem;"
+                                >
+                                    <div
+                                        style="width: 56px; height: 56px; background: var(--color-success); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;"
+                                    >
+                                        📍
+                                    </div>
+                                    <div>
+                                        <div
+                                            style="font-size: 0.875rem; color: var(--color-gray-500);"
+                                        >
+                                            Address
+                                        </div>
+                                        <div
+                                            style="font-size: 1.125rem; font-weight: 500;"
+                                        >
+                                            {businessInfo.address.full}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div
+                                    class="card"
+                                    style="padding: 1.5rem; display: flex; align-items: center; gap: 1rem;"
+                                >
+                                    <div
+                                        style="width: 56px; height: 56px; background: var(--color-warning); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;"
+                                    >
+                                        🕐
+                                    </div>
+                                    <div>
+                                        <div
+                                            style="font-size: 0.875rem; color: var(--color-gray-500);"
+                                        >
+                                            Business Hours
+                                        </div>
+                                        <div
+                                            style="font-size: 1.125rem; font-weight: 500;"
+                                        >
+                                            {businessInfo.hours.days}
+                                        </div>
+                                        <div
+                                            style="font-size: 1rem; color: var(--color-gray-600);"
+                                        >
+                                            {businessInfo.hours.time}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Contact Form -->
+                        <div>
+                            <div class="card" style="padding: 2rem;">
+                                <h2 style="margin-bottom: 0.5rem;">
+                                    Request a Free Quote
+                                </h2>
+                                <p
+                                    style="color: var(--color-gray-600); margin-bottom: 2rem;"
+                                >
+                                    Fill out the form below and I'll get back to
+                                    you shortly.
+                                </p>
+
+                                <form
+                                    action="/api/contact"
+                                    method="POST"
+                                    id="contact-form"
+                                >
+                                    <div class="form-group">
+                                        <label for="name" class="form-label"
+                                            >Your Name *</label
+                                        >
+                                        <input
+                                            type="text"
+                                            id="name"
+                                            name="name"
+                                            class="form-input"
+                                            required
+                                            placeholder="John Smith"
+                                        />
+                                    </div>
+
+                                    <div class="form-row-mobile">
+                                        <style>
+                                            .form-row-mobile {
+                                                display: grid;
+                                                gap: 1rem;
+                                                grid-template-columns: 1fr;
+                                            }
+                                            @media (min-width: 640px) {
+                                                .form-row-mobile {
+                                                    grid-template-columns: 1fr 1fr;
+                                                }
+                                            }
+                                        </style>
+                                        <div class="form-group">
+                                            <label
+                                                for="phone"
+                                                class="form-label"
+                                                >Phone *</label
+                                            >
+                                            <input
+                                                type="tel"
+                                                id="phone"
+                                                name="phone"
+                                                class="form-input"
+                                                required
+                                                placeholder="(704) 555-0123"
+                                            />
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label
+                                                for="email"
+                                                class="form-label">Email</label
+                                            >
+                                            <input
+                                                type="email"
+                                                id="email"
+                                                name="email"
+                                                class="form-input"
+                                                placeholder="john@example.com"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="service" class="form-label"
+                                            >Service Needed</label
+                                        >
+                                        <select
+                                            id="service"
+                                            name="service"
+                                            class="form-select"
+                                        >
+                                            <option value=""
+                                                >Select a service...</option
+                                            >
+                                            {
+                                                services.map((s) => (
+                                                    <option value={s.slug}>
+                                                        {s.title}
+                                                    </option>
+                                                ))
+                                            }
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="address" class="form-label"
+                                            >Project Address</label
+                                        >
+                                        <input
+                                            type="text"
+                                            id="address"
+                                            name="address"
+                                            class="form-input"
+                                            placeholder="123 Main St, Charlotte, NC"
+                                        />
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="message" class="form-label"
+                                            >Project Details *</label
+                                        >
+                                        <textarea
+                                            id="message"
+                                            name="message"
+                                            class="form-textarea"
+                                            rows="4"
+                                            required
+                                            placeholder="Tell me about your project. Pictures help! Feel free to include any details about what needs to be done."
+                                        ></textarea>
+                                    </div>
+
+                                    <!-- Consent Checkbox -->
+                                    <div
+                                        class="form-group"
+                                        style="margin-top: 1.5rem;"
+                                    >
+                                        <label
+                                            class="checkbox-label"
+                                            style="display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.875rem; line-height: 1.6;"
+                                        >
+                                            <input
+                                                type="checkbox"
+                                                name="consent"
+                                                required
+                                                style="margin-top: 0.25rem; flex-shrink: 0;"
+                                            />
+                                            <span>
+                                                I agree to the <a
+                                                    href="/privacy/"
+                                                    style="color: var(--color-accent); text-decoration: underline;"
+                                                    >Privacy Policy</a
+                                                > and <a
+                                                    href="/terms/"
+                                                    style="color: var(--color-accent); text-decoration: underline;"
+                                                    >Terms of Use</a
+                                                >. I consent to being contacted
+                                                about my request.
+                                            </span>
+                                        </label>
+                                    </div>
+
+                                    <!-- Honeypot -->
+                                    <input
+                                        type="text"
+                                        name="website"
+                                        style="display: none;"
+                                        tabindex="-1"
+                                        autocomplete="off"
+                                    />
+
+                                    <button
+                                        type="submit"
+                                        class="btn btn--primary btn--lg"
+                                        style="width: 100%;"
+                                    >
+                                        Submit Request
+                                    </button>
+
+                                    <p
+                                        style="text-align: center; font-size: 0.875rem; color: var(--color-gray-500); margin-top: 1rem; margin-bottom: 0;"
+                                    >
+                                        Or call directly: <a
+                                            href={getPhoneLink()}
+                                            style="color: var(--color-accent); font-weight: 600;"
+                                            >{businessInfo.phone}</a
+                                        >
+                                    </p>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Close contact-grid -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Service Area Note -->
+    <section class="section bg-gray">
+        <div class="container" style="text-align: center;">
+            <h2 style="margin-bottom: 1rem;">Service Area</h2>
+            <p
+                style="font-size: 1.125rem; color: var(--color-gray-700); max-width: 600px; margin: 0 auto;"
+            >
+                I serve Charlotte, NC and all surrounding areas within a 50-mile
+                radius, including Mecklenburg, Gaston, Union, and Cabarrus
+                counties.
+            </p>
+            <a
+                href="/service-areas/"
+                class="btn btn--secondary"
+                style="margin-top: 2rem;"
+            >
+                View All Service Areas →
+            </a>
+        </div>
+    </section>
+</BaseLayout>
+
+<script>
+    // Handle contact form submission
+    const form = document.getElementById("contact-form");
+
+    if (form) {
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+
+            // Check honeypot
+            const honeypot = form.querySelector('input[name="website"]');
+            if (honeypot && honeypot.value) {
+                return; // Likely a bot
+            }
+
+            // Disable button and show loading
+            submitBtn.disabled = true;
+            submitBtn.textContent = "Sending...";
+
+            try {
+                const formData = new FormData(form);
+                const data = {
+                    name: formData.get("name"),
+                    phone: formData.get("phone"),
+                    email: formData.get("email"),
+                    service: formData.get("service"),
+                    address: formData.get("address"),
+                    message: formData.get("message"),
+                    source: window.location.pathname,
+                };
+
+                const response = await fetch(
+                    "/.netlify/functions/send-telegram",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(data),
+                    },
+                );
+
+                if (response.ok) {
+                    // Track successful form submission
+                    if (typeof window.trackFormSubmission === "function") {
+                        window.trackFormSubmission("contact_page", data);
+                    }
+                    if (typeof window.trackContactSuccess === "function") {
+                        window.trackContactSuccess();
+                    }
+
+                    // Success! Show message and reset form
+                    submitBtn.textContent = "✓ Message Sent!";
+                    submitBtn.style.backgroundColor = "var(--color-success)";
+                    form.reset();
+
+                    // Show success alert
+                    const successMsg = document.createElement("div");
+                    successMsg.style.cssText =
+                        "padding: 1rem; background: #d4edda; color: #155724; border: 1px solid #c3e6cb; border-radius: 0.5rem; margin-top: 1rem;";
+                    successMsg.textContent =
+                        "Thank you! I'll get back to you soon.";
+                    form.insertAdjacentElement("afterend", successMsg);
+
+                    setTimeout(() => {
+                        successMsg.remove();
+                        submitBtn.textContent = originalText;
+                        submitBtn.style.backgroundColor = "";
+                        submitBtn.disabled = false;
+                    }, 5000);
+                } else {
+                    throw new Error("Failed to send message");
+                }
+            } catch (error) {
+                console.error("Error:", error);
+
+                // Show error
+                submitBtn.textContent = "✗ Error - Try calling instead";
+                submitBtn.style.backgroundColor = "var(--color-error)";
+
+                setTimeout(() => {
+                    submitBtn.textContent = originalText;
+                    submitBtn.style.backgroundColor = "";
+                    submitBtn.disabled = false;
+                }, 3000);
+            }
+        });
+    }
+</script>

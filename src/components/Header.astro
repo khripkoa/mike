@@ -1,0 +1,86 @@
+---
+import { businessInfo, getPhoneLink } from "../data/business.js";
+import { services } from "../data/services.js";
+
+const navLinks = [
+    { href: "/", label: "Home" },
+    { href: "/services/", label: "Services" },
+    { href: "/service-areas/", label: "Service Areas" },
+    { href: "/portfolio/", label: "Portfolio" },
+    { href: "/blog/", label: "Blog" },
+    { href: "/testimonials/", label: "Reviews" },
+    { href: "/about/", label: "About" },
+    { href: "/contact/", label: "Contact" },
+];
+---
+
+<header class="header">
+    <div class="header__container">
+        <a href="/" class="header__logo">
+            <span>🔧</span>
+            <span>Handy Mike</span>
+        </a>
+
+        <nav class="header__nav" aria-label="Main navigation">
+            <ul class="header__nav-list">
+                {
+                    navLinks.map((link) => (
+                        <li>
+                            <a href={link.href} class="header__nav-link">
+                                {link.label}
+                            </a>
+                        </li>
+                    ))
+                }
+            </ul>
+        </nav>
+
+        <div class="header__cta">
+            <a href={getPhoneLink()} class="btn btn--primary">
+                <span>📞</span>
+                <span>{businessInfo.phone}</span>
+            </a>
+        </div>
+
+        <button
+            class="header__mobile-toggle"
+            id="mobile-toggle"
+            aria-label="Open menu"
+        >
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </div>
+</header>
+
+<!-- Mobile Menu -->
+<div class="mobile-overlay" id="mobile-overlay"></div>
+<nav class="mobile-menu" id="mobile-menu" aria-label="Mobile navigation">
+    <button class="mobile-menu__close" id="mobile-close" aria-label="Close menu"
+        >✕</button
+    >
+
+    <ul class="mobile-menu__list">
+        {
+            navLinks.map((link) => (
+                <li class="mobile-menu__item">
+                    <a href={link.href} class="mobile-menu__link">
+                        {link.label}
+                    </a>
+                </li>
+            ))
+        }
+    </ul>
+
+    <div style="margin-top: 2rem;">
+        <a
+            href={getPhoneLink()}
+            class="btn btn--primary btn--lg"
+            style="width: 100%;"
+        >
+            <span>📞</span>
+            <span>Call {businessInfo.phone}</span>
+        </a>
+    </div>
+</nav>

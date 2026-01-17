@@ -1,0 +1,27 @@
+---
+interface Props {
+    slug: string;
+    icon: string;
+    title: string;
+    description: string;
+    shortTitle?: string;
+    location?: string;
+    fullPath?: string; // For custom full paths like ZIP pages
+}
+
+const { slug, icon, title, description, shortTitle, location, fullPath } =
+    Astro.props;
+
+// Use fullPath if provided, otherwise construct from location or use /services/
+const href =
+    fullPath || (location ? `/${location}/${slug}/` : `/services/${slug}/`);
+---
+
+<article class="service-card">
+    <div class="service-card__icon">{icon}</div>
+    <h3 class="service-card__title">{shortTitle || title}</h3>
+    <p class="service-card__text">{description.substring(0, 120)}...</p>
+    <a href={href} class="service-card__link">
+        Learn More <span>→</span>
+    </a>
+</article>

@@ -1,0 +1,172 @@
+---
+interface Props {
+    name: string;
+    date: string;
+    rating: number;
+    text: string;
+    tags?: string[];
+    duration?: string;
+    images?: string[];
+    folder?: string;
+    showImages?: boolean;
+}
+
+const {
+    name,
+    date,
+    rating,
+    text,
+    tags = [],
+    duration,
+    images = [],
+    folder = "",
+    showImages = true,
+} = Astro.props;
+
+const initials = name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase();
+const stars = "★".repeat(rating) + "☆".repeat(5 - rating);
+---
+
+<article class="testimonial-card">
+    <div class="testimonial-card__header">
+        <div class="testimonial-card__avatar">
+            {initials}
+        </div>
+        <div class="testimonial-card__info">
+            <h4>{name}</h4>
+            <p class="testimonial-card__date">📅 {date}</p>
+        </div>
+        <div class="stars stars--lg" style="margin-left: auto;">
+            {stars}
+        </div>
+    </div>
+
+    <p class="testimonial-card__text">"{text}"</p>
+
+    {
+        showImages && images.length > 0 && (
+            <div class="testimonial-card__images">
+                {images.slice(0, 3).map((img, i) => (
+                    <img
+                        src={`/images/testimonials/${folder}/${img}`}
+                        alt={`Work by Mike for ${name} - Photo ${i + 1}`}
+                        class="testimonial-card__image"
+                        loading="lazy"
+                        width="150"
+                        height="100"
+                    />
+                ))}
+            </div>
+        )
+    }
+
+    {
+        tags.length > 0 && (
+            <div class="testimonial-card__tags">
+                {tags.slice(0, 4).map((tag) => (
+                    <span class="badge badge--primary">{tag}</span>
+                ))}
+                {duration && (
+                    <span class="badge badge--accent">{duration}</span>
+                )}
+            </div>
+        )
+    }
+</article>
+
+<style>
+    .testimonial-card {
+        background: white;
+        border-radius: 1rem;
+        padding: 1.5rem;
+        box-shadow:
+            0 4px 6px -1px rgba(0, 0, 0, 0.1),
+            0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+
+    .testimonial-card__header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .testimonial-card__avatar {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: linear-gradient(
+            135deg,
+            var(--color-primary),
+            var(--color-accent)
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: white;
+        flex-shrink: 0;
+    }
+
+    .testimonial-card__info h4 {
+        font-size: 1.125rem;
+        margin: 0 0 0.25rem 0;
+    }
+
+    .testimonial-card__date {
+        font-size: 0.875rem;
+        color: var(--color-gray-500);
+        margin: 0;
+    }
+
+    .testimonial-card__text {
+        color: var(--color-gray-700);
+        line-height: 1.75;
+        margin-bottom: 1rem;
+        font-style: italic;
+    }
+
+    .testimonial-card__images {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
+    }
+
+    .testimonial-card__image {
+        width: 120px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 0.5rem;
+        flex-shrink: 0;
+    }
+
+    @media (min-width: 640px) {
+        .testimonial-card__image {
+            width: 150px;
+            height: 100px;
+        }
+    }
+
+    .testimonial-card__tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .stars {
+        display: inline-flex;
+        gap: 2px;
+        color: #fbbf24;
+    }
+
+    .stars--lg {
+        font-size: 1.25rem;
+    }
+</style>

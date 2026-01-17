@@ -1,0 +1,150 @@
+<!-- Google Analytics 4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"
+></script>
+<script is:inline>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+    gtag("config", "G-XXXXXXXXXX", {
+        page_path: window.location.pathname,
+    });
+</script>
+
+<!-- Event Tracking -->
+<script is:inline>
+    // Helper function to track events
+    function trackEvent(eventName, eventParams = {}) {
+        if (typeof gtag !== "undefined") {
+            gtag("event", eventName, eventParams);
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        // Track phone clicks
+        document.querySelectorAll('a[href^="tel:"]').forEach(function (link) {
+            link.addEventListener("click", function () {
+                trackEvent("phone_click", {
+                    phone_number: this.getAttribute("href").replace("tel:", ""),
+                    location: this.closest("section")?.className || "unknown",
+                });
+            });
+        });
+
+        // Track email clicks
+        document
+            .querySelectorAll('a[href^="mailto:"]')
+            .forEach(function (link) {
+                link.addEventListener("click", function () {
+                    trackEvent("email_click", {
+                        email: this.getAttribute("href").replace("mailto:", ""),
+                    });
+                });
+            });
+
+        // Track CTA button clicks
+        document
+            .querySelectorAll(".btn--primary, .btn--accent, .hero__quote-btn")
+            .forEach(function (btn) {
+                btn.addEventListener("click", function (e) {
+                    const btnText = this.textContent.trim();
+                    const btnHref = this.getAttribute("href");
+
+                    trackEvent("cta_click", {
+                        button_text: btnText,
+                        button_location:
+                            this.closest("section")?.className || "unknown",
+                        button_href: btnHref || "no-href",
+                    });
+                });
+            });
+
+        // Track service card clicks
+        document
+            .querySelectorAll('.service-card, a[href*="/services/"]')
+            .forEach(function (card) {
+                card.addEventListener("click", function () {
+                    const serviceTitle =
+                        this.querySelector("h3, h4, h2")?.textContent ||
+                        "Unknown";
+                    trackEvent("service_click", {
+                        service_name: serviceTitle.trim(),
+                    });
+                });
+            });
+
+        // Track quote modal open
+        const quoteModal = document.getElementById("quote-modal");
+        if (quoteModal) {
+            const observer = new MutationObserver(function (mutations) {
+                mutations.forEach(function (mutation) {
+                    if (mutation.target.classList.contains("modal--open")) {
+                        trackEvent("quote_modal_open");
+                    }
+                });
+            });
+            observer.observe(quoteModal, {
+                attributes: true,
+                attributeFilter: ["class"],
+            });
+        }
+
+        // Track form submissions (will be called from form handlers)
+        window.trackFormSubmission = function (formType, formData) {
+            trackEvent("form_submit", {
+                form_type: formType,
+                service: formData.service || "General",
+            });
+        };
+
+        // Track quote modal form success
+        window.trackQuoteSuccess = function () {
+            trackEvent("conversion", {
+                conversion_type: "quote_request",
+                source: "modal",
+            });
+        };
+
+        // Track contact form success
+        window.trackContactSuccess = function () {
+            trackEvent("conversion", {
+                conversion_type: "contact_form",
+                source: "contact_page",
+            });
+        };
+
+        // Track scroll depth
+        let maxScroll = 0;
+        window.addEventListener("scroll", function () {
+            const scrollPercent = Math.round(
+                ((window.scrollY + window.innerHeight) /
+                    document.documentElement.scrollHeight) *
+                    100,
+            );
+            if (scrollPercent > maxScroll) {
+                maxScroll = scrollPercent;
+                if (maxScroll >= 25 && maxScroll < 50) {
+                    trackEvent("scroll_depth", { depth: "25%" });
+                } else if (maxScroll >= 50 && maxScroll < 75) {
+                    trackEvent("scroll_depth", { depth: "50%" });
+                } else if (maxScroll >= 75 && maxScroll < 100) {
+                    trackEvent("scroll_depth", { depth: "75%" });
+                } else if (maxScroll >= 100) {
+                    trackEvent("scroll_depth", { depth: "100%" });
+                }
+            }
+        });
+
+        // Track outbound links
+        document.querySelectorAll('a[href^="http"]').forEach(function (link) {
+            if (!link.href.includes(window.location.hostname)) {
+                link.addEventListener("click", function () {
+                    trackEvent("outbound_click", {
+                        url: this.href,
+                    });
+                });
+            }
+        });
+    });
+</script>

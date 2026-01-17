@@ -1,0 +1,11 @@
+# Mike's Handyman Services
+# https://mike-handyman.com
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://mike-handyman.com/sitemap.xml
+
+# Crawl-delay
+Crawl-delay: 1

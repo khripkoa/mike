@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <circle cx="50" cy="50" r="45" fill="#1e3a5f"/>
+  <!-- Drill icon in orange -->
+  <g fill="#ff6b35">
+    <!-- Drill chuck/tip -->
+    <rect x="62" y="45" width="14" height="10" rx="1.5"/>
+    <rect x="76" y="47" width="4" height="6" rx="1"/>
+    <!-- Main drill body -->
+    <rect x="38" y="42" width="24" height="16" rx="2"/>
+    <!-- Handle -->
+    <rect x="30" y="48" width="10" height="10" rx="2"/>
+    <!-- Battery pack bottom -->
+    <rect x="38" y="54" width="12" height="6" rx="1.5"/>
+    <!-- Vent lines for detail -->
+    <rect x="44" y="45" width="1.5" height="8" rx="0.5" opacity="0.4"/>
+    <rect x="48" y="45" width="1.5" height="8" rx="0.5" opacity="0.4"/>
+    <rect x="52" y="45" width="1.5" height="8" rx="0.5" opacity="0.4"/>
+  </g>
+</svg>

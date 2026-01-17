@@ -1,0 +1,378 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ServiceHero from "../../components/ServiceHero.astro";
+import CTASection from "../../components/CTASection.astro";
+import TestimonialCard from "../../components/TestimonialCard.astro";
+import { services, getServiceBySlug } from "../../data/services.js";
+import { getTestimonialsByService } from "../../data/testimonials.js";
+import { getAllCities, getAllNeighborhoods } from "../../data/locations.js";
+import { businessInfo, getPhoneLink } from "../../data/business.js";
+
+export function getStaticPaths() {
+    return services.map((service) => ({
+        params: { service: service.slug },
+        props: { service },
+    }));
+}
+
+const { service } = Astro.props;
+const testimonials = getTestimonialsByService(service.slug);
+const cities = getAllCities().slice(0, 12);
+const neighborhoods = getAllNeighborhoods().slice(0, 8);
+
+const faqData = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+        {
+            "@type": "Question",
+            name: `How much does ${service.shortTitle.toLowerCase()} cost in Charlotte, NC?`,
+            acceptedAnswer: {
+                "@type": "Answer",
+                text: "Most handyman services in Charlotte range from $75-$300 depending on the complexity. Simple repairs start at $75, while more involved projects may cost $150-$300. I provide free quotes and transparent pricing with no hidden fees.",
+            },
+        },
+        {
+            "@type": "Question",
+            name: `Do you offer same-day ${service.shortTitle.toLowerCase()} service?`,
+            acceptedAnswer: {
+                "@type": "Answer",
+                text: "Yes! I offer same-day service when available. Call (704) 111-1111 to check my availability. I serve Charlotte, NC and surrounding areas within 50 miles.",
+            },
+        },
+        {
+            "@type": "Question",
+            name: "How experienced are you?",
+            acceptedAnswer: {
+                "@type": "Answer",
+                text: "I have 7+ years of professional handyman experience and I'm a Thumbtack Top Pro with 28 five-star reviews from satisfied Charlotte customers.",
+            },
+        },
+        {
+            "@type": "Question",
+            name: "What areas do you serve?",
+            acceptedAnswer: {
+                "@type": "Answer",
+                text: "I serve Charlotte, NC and all surrounding areas within a 50-mile radius, including Mecklenburg, Gaston, Union, and Cabarrus counties. This includes neighborhoods like Ballantyne, South Park, Myers Park, University City, and Matthews.",
+            },
+        },
+    ],
+};
+
+const schemaData = [
+    {
+        "@context": "https://schema.org",
+        "@type": "Service",
+        name: service.title,
+        description: service.description,
+        provider: {
+            "@type": "LocalBusiness",
+            name: businessInfo.name,
+            telephone: businessInfo.phone,
+            address: {
+                "@type": "PostalAddress",
+                addressLocality: "Charlotte",
+                addressRegion: "NC",
+                addressCountry: "US",
+            },
+        },
+        areaServed: {
+            "@type": "City",
+            name: "Charlotte, NC",
+        },
+    },
+    faqData,
+];
+---
+
+<BaseLayout
+    title={service.title}
+    description={service.metaDescription}
+    canonical={`/services/${service.slug}/`}
+    structuredData={schemaData}
+>
+    <!-- Service Hero -->
+    <ServiceHero
+        title={service.title}
+        subtitle={service.description}
+        badge={`${service.icon} Expert ${service.shortTitle} • Charlotte, NC`}
+    />
+
+    <!-- Service Description -->
+    <section class="section" style="padding: 2rem 0 3rem 0;">
+        <div class="container">
+            <p
+                style="font-size: 1.125rem; line-height: 1.8; color: var(--color-gray-700); max-width: 800px; margin: 0 auto; text-align: center;"
+            >
+                {service.description}
+            </p>
+        </div>
+    </section>
+
+    <!-- Service Details -->
+    <section class="section section--lg">
+        <div class="container">
+            <div
+                style="display: grid; gap: 4rem; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));"
+            >
+                <!-- What We Do -->
+                <div>
+                    <h2 style="margin-bottom: 1.5rem;">What We Do</h2>
+                    <p
+                        style="font-size: 1.125rem; line-height: 1.8; margin-bottom: 2rem;"
+                    >
+                        {service.description} Our team has years of experience delivering
+                        high-quality results for Charlotte homeowners.
+                    </p>
+
+                    <h3 style="margin-bottom: 1rem;">
+                        Our {service.shortTitle} Services Include:
+                    </h3>
+                    <ul style="list-style: none; display: grid; gap: 0.75rem;">
+                        {
+                            service.services.map((s) => (
+                                <li style="display: flex; align-items: center; gap: 0.75rem;">
+                                    <span style="color: var(--color-success); font-weight: bold;">
+                                        ✓
+                                    </span>
+                                    <span>{s}</span>
+                                </li>
+                            ))
+                        }
+                    </ul>
+                </div>
+
+                <!-- Quick Quote Card -->
+                <div>
+                    <div
+                        class="card card--glass"
+                        style="padding: 2rem; border: 2px solid var(--color-accent);"
+                    >
+                        <h3 style="text-align: center; margin-bottom: 1rem;">
+                            Get a Free {service.shortTitle} Quote
+                        </h3>
+                        <p
+                            style="text-align: center; color: var(--color-gray-600); margin-bottom: 1.5rem;"
+                        >
+                            Call now for a free estimate
+                        </p>
+
+                        <a
+                            href={getPhoneLink()}
+                            class="btn btn--primary btn--xl"
+                            style="width: 100%; margin-bottom: 1.5rem;"
+                        >
+                            <span>📞</span>
+                            <span>{businessInfo.phone}</span>
+                        </a>
+
+                        <div style="text-align: center;">
+                            <a
+                                href="/contact/"
+                                style="color: var(--color-primary); font-weight: 500;"
+                            >
+                                Or request a quote online →
+                            </a>
+                        </div>
+
+                        <!-- Trust Badges -->
+                        <div
+                            style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--color-gray-200);"
+                        >
+                            <div
+                                style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; text-align: center; font-size: 0.875rem;"
+                            >
+                                <div>
+                                    <div
+                                        style="font-weight: 600; color: var(--color-primary);"
+                                    >
+                                        ✓ 7+ Years Exp.
+                                    </div>
+                                </div>
+                                <div>
+                                    <div
+                                        style="font-weight: 600; color: var(--color-primary);"
+                                    >
+                                        ✓ Top Pro
+                                    </div>
+                                </div>
+                                <div>
+                                    <div
+                                        style="font-weight: 600; color: var(--color-primary);"
+                                    >
+                                        ✓ Background Checked
+                                    </div>
+                                </div>
+                                <div>
+                                    <div
+                                        style="font-weight: 600; color: var(--color-primary);"
+                                    >
+                                        ✓ Fair Pricing
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Photo Gallery -->
+    {
+        service.photos && service.photos.length > 0 && (
+            <section class="section bg-gray">
+                <div class="container">
+                    <h2 style="text-align: center; margin-bottom: 2rem;">
+                        Our {service.shortTitle} Work
+                    </h2>
+                    <p style="text-align: center; color: var(--color-gray-600); margin-bottom: 2.5rem;">
+                        Real photos from actual{" "}
+                        {service.shortTitle.toLowerCase()} projects in Charlotte
+                    </p>
+                    <div class="service-gallery">
+                        {service.photos.map((photo, index) => (
+                            <div class="gallery-item">
+                                <img
+                                    src={`/images/services/${photo}`}
+                                    alt={`${service.shortTitle} work example ${index + 1}`}
+                                    loading={index < 2 ? "eager" : "lazy"}
+                                    class="gallery-image"
+                                />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+        )
+    }
+
+    <!-- Testimonials for this service -->
+    {
+        testimonials.length > 0 && (
+            <section class="section bg-gray">
+                <div class="container">
+                    <h2 style="text-align: center; margin-bottom: 2rem;">
+                        What Our Clients Say About {service.shortTitle}
+                    </h2>
+                    <div class="grid grid--2">
+                        {testimonials.map((t) => (
+                            <TestimonialCard
+                                name={t.name}
+                                date={t.date}
+                                rating={t.rating}
+                                text={t.text}
+                                tags={t.tags}
+                                showImages={true}
+                                images={t.images}
+                                folder={t.folder}
+                            />
+                        ))}
+                    </div>
+                </div>
+            </section>
+        )
+    }
+
+    <!-- Areas We Serve -->
+    <section class="section">
+        <div class="container">
+            <h2 style="text-align: center; margin-bottom: 1rem;">
+                {service.title} Near You
+            </h2>
+            <p
+                style="text-align: center; color: var(--color-gray-600); margin-bottom: 2rem;"
+            >
+                We provide {service.shortTitle.toLowerCase()} services throughout
+                the Charlotte metro area:
+            </p>
+
+            <div
+                style="display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; margin-bottom: 2rem;"
+            >
+                {
+                    cities.map((city) => (
+                        <a
+                            href={`/${city.slug}/${service.slug}/`}
+                            class="badge badge--primary"
+                            style="padding: 0.5rem 1rem;"
+                        >
+                            {service.shortTitle} in {city.name}
+                        </a>
+                    ))
+                }
+            </div>
+
+            <div
+                style="display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center;"
+            >
+                {
+                    neighborhoods.map((n) => (
+                        <a
+                            href={`/${n.slug}/${service.slug}/`}
+                            class="badge"
+                            style="padding: 0.5rem 1rem;"
+                        >
+                            {n.name}
+                        </a>
+                    ))
+                }
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <CTASection
+        title={`Ready for Professional ${service.shortTitle} Service?`}
+        subtitle="Call now for a free estimate. Available 7 days a week."
+    />
+</BaseLayout>
+
+<style>
+    .service-gallery {
+        display: grid;
+        gap: 1.5rem;
+        grid-template-columns: 1fr;
+    }
+
+    @media (min-width: 640px) {
+        .service-gallery {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (min-width: 1024px) {
+        .service-gallery {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    .gallery-item {
+        position: relative;
+        overflow: hidden;
+        border-radius: 0.75rem;
+        background: white;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .gallery-item:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
+    }
+
+    .gallery-image {
+        width: 100%;
+        height: auto;
+        min-height: 250px;
+        max-height: 400px;
+        object-fit: contain;
+        background: #f5f5f5;
+        display: block;
+        transition: transform 0.3s ease;
+    }
+
+    .gallery-item:hover .gallery-image {
+        transform: scale(1.05);
+    }
+</style>

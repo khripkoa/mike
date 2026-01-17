@@ -1,0 +1,342 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Hero from "../components/Hero.astro";
+import ServiceCard from "../components/ServiceCard.astro";
+import TestimonialCard from "../components/TestimonialCard.astro";
+import CTASection from "../components/CTASection.astro";
+import { services } from "../data/services.js";
+import { getFeaturedTestimonials } from "../data/testimonials.js";
+import { locations, getCityBySlug } from "../data/locations.js";
+import { businessInfo } from "../data/business.js";
+
+const featuredServices = services.slice(0, 6);
+const testimonials = getFeaturedTestimonials(3);
+const counties = locations.counties;
+const charlotte = getCityBySlug("charlotte"); // Get Charlotte data for ZIP codes
+---
+
+<BaseLayout
+	title="Professional Handyman Services in Charlotte, NC"
+	description="Charlotte's trusted handyman with 7+ years experience. Door repair, drywall, painting, plumbing, electrical, furniture assembly & more. Thumbtack Top Pro with 28 five-star reviews. Call (704) 111-1111 for a free quote."
+	canonical="/"
+>
+	<!-- Hero Section -->
+	<Hero />
+
+	<!-- Services Section -->
+	<section class="services-section section section--lg">
+		<div class="container">
+			<div class="section__header">
+				<span class="section__label">What We Do</span>
+				<h2 class="section__title">Professional Handyman Services</h2>
+				<p class="section__subtitle">
+					From small repairs to major installations, we handle it all
+					with expertise and care.
+				</p>
+			</div>
+
+			<div class="grid grid--3">
+				{
+					featuredServices.map((service) => (
+						<ServiceCard
+							slug={service.slug}
+							icon={service.icon}
+							title={service.title}
+							shortTitle={service.shortTitle}
+							description={service.description}
+						/>
+					))
+				}
+			</div>
+
+			<div style="text-align: center; margin-top: 3rem;">
+				<a href="/services/" class="btn btn--secondary btn--lg">
+					View All Services →
+				</a>
+			</div>
+		</div>
+	</section>
+
+	<!-- Pricing Section -->
+	<section class="section bg-gray">
+		<div class="container">
+			<div class="section__header">
+				<span class="section__label">Transparent Pricing</span>
+				<h2 class="section__title">Most Jobs: $75-$300</h2>
+				<p class="section__subtitle">
+					Honest, upfront pricing. No hidden fees, no surprises.
+				</p>
+			</div>
+
+			<div class="grid grid--3">
+				<div class="card" style="text-align: center; padding: 2rem;">
+					<div style="font-size: 3rem; margin-bottom: 1rem;">💰</div>
+					<h3 style="font-size: 1.25rem; margin-bottom: 0.5rem;">
+						Small Repairs
+					</h3>
+					<p
+						style="font-size: 1.5rem; font-weight: 700; color: var(--color-accent); margin: 0.5rem 0;"
+					>
+						$75-$150
+					</p>
+					<p
+						style="color: var(--color-gray-600); margin: 0; font-size: 0.95rem;"
+					>
+						Door adjustments, picture hanging, minor fixes
+					</p>
+				</div>
+
+				<div class="card" style="text-align: center; padding: 2rem;">
+					<div style="font-size: 3rem; margin-bottom: 1rem;">🔨</div>
+					<h3 style="font-size: 1.25rem; margin-bottom: 0.5rem;">
+						Medium Projects
+					</h3>
+					<p
+						style="font-size: 1.5rem; font-weight: 700; color: var(--color-accent); margin: 0.5rem 0;"
+					>
+						$150-$300
+					</p>
+					<p
+						style="color: var(--color-gray-600); margin: 0; font-size: 0.95rem;"
+					>
+						Drywall repairs, furniture assembly, installations
+					</p>
+				</div>
+
+				<div class="card" style="text-align: center; padding: 2rem;">
+					<div style="font-size: 3rem; margin-bottom: 1rem;">🏗️</div>
+					<h3 style="font-size: 1.25rem; margin-bottom: 0.5rem;">
+						Large Projects
+					</h3>
+					<p
+						style="font-size: 1.5rem; font-weight: 700; color: var(--color-accent); margin: 0.5rem 0;"
+					>
+						$300+
+					</p>
+					<p
+						style="color: var(--color-gray-600); margin: 0; font-size: 0.95rem;"
+					>
+						Cabinet installs, electrical work, custom builds
+					</p>
+				</div>
+			</div>
+
+			<p
+				style="text-align: center; margin-top: 2rem; color: var(--color-gray-600);"
+			>
+				✓ Free estimates • ✓ No hidden fees • ✓ Same-day service
+				available
+			</p>
+		</div>
+	</section>
+
+	<!-- Why Choose Us Section -->
+	<section class="section">
+		<div class="container">
+			<div class="section__header">
+				<span class="section__label">Why Choose Us</span>
+				<h2 class="section__title">Your Home Deserves the Best</h2>
+				<p class="section__subtitle">
+					Here's why Charlotte homeowners trust Mike for their
+					handyman needs.
+				</p>
+			</div>
+
+			<div class="grid grid--4">
+				<div class="card" style="text-align: center; padding: 2rem;">
+					<div style="font-size: 3rem; margin-bottom: 1rem;">🔧</div>
+					<h3 style="font-size: 1.25rem; margin-bottom: 0.5rem;">
+						7+ Years Experience
+					</h3>
+					<p
+						style="color: var(--color-gray-600); margin: 0; font-size: 0.95rem;"
+					>
+						Over 7 years of hands-on experience in homes just like
+						yours.
+					</p>
+				</div>
+
+				<div class="card" style="text-align: center; padding: 2rem;">
+					<div style="font-size: 3rem; margin-bottom: 1rem;">⭐</div>
+					<h3 style="font-size: 1.25rem; margin-bottom: 0.5rem;">
+						Top Pro Status
+					</h3>
+					<p
+						style="color: var(--color-gray-600); margin: 0; font-size: 0.95rem;"
+					>
+						Recognized as a Top Pro for quality work and customer
+						satisfaction.
+					</p>
+				</div>
+
+				<div class="card" style="text-align: center; padding: 2rem;">
+					<div style="font-size: 3rem; margin-bottom: 1rem;">💰</div>
+					<h3 style="font-size: 1.25rem; margin-bottom: 0.5rem;">
+						Clear Pricing
+					</h3>
+					<p
+						style="color: var(--color-gray-600); margin: 0; font-size: 0.95rem;"
+					>
+						Honest, upfront quotes. No hidden fees, no surprises.
+					</p>
+				</div>
+
+				<div class="card" style="text-align: center; padding: 2rem;">
+					<div style="font-size: 3rem; margin-bottom: 1rem;">🛡️</div>
+					<h3 style="font-size: 1.25rem; margin-bottom: 0.5rem;">
+						Background Checked
+					</h3>
+					<p
+						style="color: var(--color-gray-600); margin: 0; font-size: 0.95rem;"
+					>
+						Fully vetted for your peace of mind and security.
+					</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Testimonials Section -->
+	<section class="section bg-gray">
+		<div class="container">
+			<div class="section__header">
+				<span class="section__label">What Clients Say</span>
+				<h2 class="section__title">Real Reviews from Real Customers</h2>
+				<p class="section__subtitle">
+					Don't just take our word for it. Here's what our clients
+					have to say.
+				</p>
+			</div>
+
+			<div class="grid grid--3">
+				{
+					testimonials.map((t) => (
+						<TestimonialCard
+							name={t.name}
+							date={t.date}
+							rating={t.rating}
+							text={
+								t.text.length > 250
+									? t.text.substring(0, 250) + "..."
+									: t.text
+							}
+							tags={t.tags}
+							duration={t.duration}
+							images={t.images}
+							folder={t.folder}
+							showImages={true}
+						/>
+					))
+				}
+			</div>
+
+			<div style="text-align: center; margin-top: 3rem;">
+				<a href="/testimonials/" class="btn btn--secondary btn--lg">
+					Read All Reviews →
+				</a>
+			</div>
+		</div>
+	</section>
+
+	<!-- Charlotte ZIP Codes Section -->
+	{
+		charlotte &&
+			charlotte.zipDetails &&
+			charlotte.zipDetails.length > 0 && (
+				<section class="section bg-gray">
+					<div class="container">
+						<div class="section__header">
+							<span class="section__label">
+								Charlotte Neighborhoods
+							</span>
+							<h2 class="section__title">Service by ZIP Code</h2>
+							<p class="section__subtitle">
+								Find your neighborhood for local service
+								information and pricing
+							</p>
+						</div>
+
+						<div style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; max-width: 900px; margin: 0 auto;">
+							{charlotte.zipDetails.map((zip) => (
+								<a
+									href={`/charlotte/zip/${zip.code}/`}
+									class="card"
+									style="padding: 1.25rem 1.5rem; text-decoration: none; display: flex; flex-direction: column; gap: 0.5rem; min-width: 140px; transition: transform 0.2s, box-shadow 0.2s;"
+								>
+									<div style="font-size: 1.5rem; font-weight: 700; color: var(--color-primary);">
+										{zip.code}
+									</div>
+									<div style="font-size: 0.875rem; color: var(--color-gray-600);">
+										{zip.area}
+									</div>
+									<div style="font-size: 0.75rem; color: var(--color-accent); font-weight: 600; text-transform: uppercase;">
+										{zip.type === "condo"
+											? "🏢 Condos"
+											: zip.type === "house"
+												? "🏡 Houses"
+												: "🏘️ Mixed"}
+									</div>
+								</a>
+							))}
+						</div>
+
+						<div style="text-align: center; margin-top: 2rem;">
+							<a href="/charlotte/" class="btn btn--secondary">
+								View All Charlotte Services →
+							</a>
+						</div>
+					</div>
+				</section>
+			)
+	}
+
+	<!-- Service Areas Section -->
+	<section class="section">
+		<div class="container">
+			<div class="section__header">
+				<span class="section__label">Where We Serve</span>
+				<h2 class="section__title">
+					Serving Charlotte & Surrounding Areas
+				</h2>
+				<p class="section__subtitle">
+					Professional handyman services within a 50-mile radius of
+					Charlotte, NC.
+				</p>
+			</div>
+
+			<div class="areas-grid">
+				{
+					counties.map((county) => (
+						<div class="area-card">
+							<h3 class="area-card__title">{county.name}</h3>
+							<ul class="area-card__list">
+								{county.cities.slice(0, 6).map((city) => (
+									<li>
+										<a
+											href={`/${city.slug}/`}
+											class="area-card__link"
+										>
+											{city.name}
+										</a>
+									</li>
+								))}
+							</ul>
+						</div>
+					))
+				}
+			</div>
+
+			<div style="text-align: center; margin-top: 3rem;">
+				<a href="/service-areas/" class="btn btn--secondary btn--lg">
+					View All Service Areas →
+				</a>
+			</div>
+		</div>
+	</section>
+
+	<!-- CTA Section -->
+	<CTASection
+		title="Ready to Get Your Project Done?"
+		subtitle="Call now for a free quote. Available 7 days a week."
+	/>
+</BaseLayout>

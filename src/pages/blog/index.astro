@@ -1,0 +1,359 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { businessInfo } from "../../data/business.js";
+import { getCollection } from "astro:content";
+
+// Fetch all blog posts
+const allPosts = await getCollection("blog");
+
+// Sort by date (newest first)
+const blogPosts = allPosts.sort(
+    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+
+// Get unique categories for filter
+const categories = [
+    "All",
+    ...new Set(blogPosts.map((post) => post.data.category)),
+];
+---
+
+<BaseLayout
+    title="Handyman Tips & Guides | Charlotte, NC"
+    description="Expert handyman advice, DIY tips, and home maintenance guides for Charlotte homeowners. Learn from 7+ years of professional experience."
+    canonical="/blog/"
+>
+    <!-- Blog Header -->
+    <section
+        class="page-header"
+        style="background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%); padding: 4rem 0; text-align: center; color: white;"
+    >
+        <div class="container">
+            <h1 style="margin-bottom: 1rem; font-size: 2.5rem;">
+                Handyman Tips & Guides
+            </h1>
+            <p
+                style="font-size: 1.125rem; opacity: 0.9; max-width: 600px; margin: 0 auto;"
+            >
+                Expert advice and DIY tips from a Charlotte handyman with 7+
+                years of experience
+            </p>
+        </div>
+    </section>
+
+    <!-- Mike's Personal Intro -->
+    <section
+        class="section"
+        style="background: var(--color-gray-50); padding: 3rem 0;"
+    >
+        <div class="container" style="max-width: 900px;">
+            <div
+                style="display: flex; gap: 2rem; align-items: center; flex-wrap: wrap;"
+            >
+                <img
+                    src="/images/mike-hero.webp"
+                    alt="Mike - Charlotte Handyman"
+                    style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"
+                />
+                <div style="flex: 1; min-width: 300px;">
+                    <h2
+                        style="margin-bottom: 0.75rem; font-size: 1.75rem; color: var(--color-gray-900);"
+                    >
+                        Hi, I'm Mike 👋
+                    </h2>
+                    <p
+                        style="color: var(--color-gray-700); line-height: 1.7; margin-bottom: 1rem;"
+                    >
+                        I've been in the handyman business for over 7 years, and
+                        recently brought my expertise to Charlotte. These guides
+                        share the same techniques I use on jobs every day - no
+                        fluff, just practical advice that works.
+                    </p>
+                    <p style="color: var(--color-gray-700); line-height: 1.7;">
+                        Whether you're tackling a DIY project or just want to
+                        understand what your handyman is doing, I hope these
+                        articles help. And if you ever need hands-on help, <a
+                            href="/contact/"
+                            style="color: var(--color-accent); font-weight: 600;"
+                            >I'm just a call away</a
+                        >.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Category Filter -->
+    <section class="section" style="padding-bottom: 0;">
+        <div class="container">
+            <div class="category-filters">
+                {
+                    categories.map((category) => (
+                        <button
+                            class={`filter-btn ${category === "All" ? "active" : ""}`}
+                            data-filter={category}
+                        >
+                            {category}
+                        </button>
+                    ))
+                }
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Posts Grid -->
+    <section class="section">
+        <div class="container">
+            <div class="blog-grid" id="blog-grid">
+                {
+                    blogPosts.map((post) => (
+                        <article
+                            class="blog-card"
+                            data-category={post.data.category}
+                        >
+                            <div class="blog-card__content">
+                                <div class="blog-card__meta">
+                                    <span class="blog-card__category">
+                                        {post.data.category}
+                                    </span>
+                                    <span class="blog-card__separator">•</span>
+                                    <span class="blog-card__date">
+                                        {post.data.pubDate.toLocaleDateString(
+                                            "en-US",
+                                            {
+                                                month: "short",
+                                                day: "numeric",
+                                                year: "numeric",
+                                            },
+                                        )}
+                                    </span>
+                                    {post.data.readTime && (
+                                        <>
+                                            <span class="blog-card__separator">
+                                                •
+                                            </span>
+                                            <span class="blog-card__read-time">
+                                                {post.data.readTime} read
+                                            </span>
+                                        </>
+                                    )}
+                                </div>
+                                <h2 class="blog-card__title">
+                                    <a href={`/blog/${post.slug}/`}>
+                                        {post.data.title}
+                                    </a>
+                                </h2>
+                                <p class="blog-card__description">
+                                    {post.data.description}
+                                </p>
+                                <a
+                                    href={`/blog/${post.slug}/`}
+                                    class="blog-card__link"
+                                >
+                                    Read More →
+                                </a>
+                            </div>
+                        </article>
+                    ))
+                }
+            </div>
+            <div
+                id="no-posts-message"
+                style="display: none; text-align: center; color: var(--color-gray-600); padding: 2rem;"
+            >
+                No posts found in this category.
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="section bg-gray">
+        <div class="container" style="max-width: 700px; text-align: center;">
+            <h2 style="margin-bottom: 1rem;">Need Professional Help?</h2>
+            <p
+                style="color: var(--color-gray-700); margin-bottom: 2rem; font-size: 1.125rem;"
+            >
+                While these guides can help with simple fixes, some jobs are
+                best left to professionals. Get a free quote for your project.
+            </p>
+            <div
+                style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;"
+            >
+                <a href="/contact/" class="btn btn--primary btn--lg"
+                    >Get Free Quote</a
+                >
+                <a
+                    href={`tel:${businessInfo.phone}`}
+                    class="btn btn--secondary btn--lg"
+                    >Call {businessInfo.phone}</a
+                >
+            </div>
+        </div>
+    </section>
+</BaseLayout>
+
+<script>
+    document.addEventListener("astro:page-load", () => {
+        initFilters();
+    });
+
+    // Also run on initial load if not using View Transitions
+    initFilters();
+
+    function initFilters() {
+        const buttons = document.querySelectorAll(".filter-btn");
+        const articles = document.querySelectorAll(".blog-card");
+        const noPostsMessage = document.getElementById("no-posts-message");
+
+        if (!buttons.length) return;
+
+        buttons.forEach((btn) => {
+            btn.addEventListener("click", () => {
+                // Remove active class from all
+                buttons.forEach((b) => b.classList.remove("active"));
+                // Add active to clicked
+                btn.classList.add("active");
+
+                const filter = btn.getAttribute("data-filter");
+                let visibleCount = 0;
+
+                articles.forEach((article) => {
+                    // cast to HTMLElement to access dataset
+                    const el = article as HTMLElement;
+                    const category = el.dataset.category;
+
+                    if (filter === "All" || category === filter) {
+                        el.style.display = "block";
+                        visibleCount++;
+                        // Add slight animation fade-in
+                        el.style.opacity = "0";
+                        setTimeout(() => (el.style.opacity = "1"), 50);
+                    } else {
+                        el.style.display = "none";
+                    }
+                });
+
+                if (noPostsMessage) {
+                    noPostsMessage.style.display =
+                        visibleCount === 0 ? "block" : "none";
+                }
+            });
+        });
+    }
+</script>
+
+<style>
+    .category-filters {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-bottom: 2rem;
+    }
+
+    .filter-btn {
+        background: white;
+        border: 1px solid var(--color-gray-200);
+        padding: 0.5rem 1.25rem;
+        border-radius: 2rem;
+        cursor: pointer;
+        font-size: 0.95rem;
+        color: var(--color-gray-700);
+        transition: all 0.2s;
+        font-family: inherit;
+    }
+
+    .filter-btn:hover {
+        border-color: var(--color-primary);
+        color: var(--color-primary);
+    }
+
+    .filter-btn.active {
+        background: var(--color-primary);
+        color: white;
+        border-color: var(--color-primary);
+    }
+
+    .blog-grid {
+        display: grid;
+        gap: 2rem;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    }
+
+    @media (max-width: 640px) {
+        .blog-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .blog-card {
+        background: white;
+        border-radius: 1rem;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        transition:
+            transform 0.2s,
+            box-shadow 0.2s,
+            opacity 0.3s;
+    }
+
+    .blog-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    }
+
+    .blog-card__content {
+        padding: 2rem;
+    }
+
+    .blog-card__meta {
+        font-size: 0.85rem;
+        color: var(--color-gray-600);
+        margin-bottom: 1rem;
+    }
+
+    .blog-card__category {
+        color: var(--color-accent);
+        font-weight: 600;
+    }
+
+    .blog-card__separator {
+        margin: 0 0.5rem;
+    }
+
+    .blog-card__title {
+        font-size: 1.5rem;
+        line-height: 1.3;
+        margin-bottom: 0.75rem;
+    }
+
+    .blog-card__title a {
+        color: var(--color-gray-900);
+        transition: color 0.2s;
+        text-decoration: none;
+    }
+
+    .blog-card__title a:hover {
+        color: var(--color-primary);
+    }
+
+    .blog-card__description {
+        color: var(--color-gray-700);
+        margin-bottom: 1rem;
+        line-height: 1.6;
+    }
+
+    .blog-card__link {
+        color: var(--color-accent);
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        transition: gap 0.2s;
+        text-decoration: none;
+    }
+
+    .blog-card__link:hover {
+        gap: 0.5rem;
+    }
+</style>

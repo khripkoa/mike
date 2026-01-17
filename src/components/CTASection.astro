@@ -1,0 +1,31 @@
+---
+import { businessInfo, getPhoneLink } from "../data/business.js";
+
+interface Props {
+    title?: string;
+    subtitle?: string;
+}
+
+const {
+    title = "Ready to Get Started?",
+    subtitle = "Contact us today for a free estimate. No hidden fees, just honest work at a fair price.",
+} = Astro.props;
+---
+
+<section class="cta-section section">
+    <div class="container">
+        <h2>{title}</h2>
+        <p>{subtitle}</p>
+
+        <a href={getPhoneLink()} class="cta__phone">
+            <span>📞</span>
+            <span>{businessInfo.phone}</span>
+        </a>
+
+        <p
+            style="margin-top: 1.5rem; margin-bottom: 0; font-size: 0.875rem; opacity: 0.9;"
+        >
+            {businessInfo.hours.days}, {businessInfo.hours.time}
+        </p>
+    </div>
+</section>

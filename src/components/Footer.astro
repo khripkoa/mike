@@ -1,0 +1,157 @@
+---
+import { businessInfo, getPhoneLink, getEmailLink } from "../data/business.js";
+import { services } from "../data/services.js";
+import { locations } from "../data/locations.js";
+
+const currentYear = new Date().getFullYear();
+
+const quickLinks = [
+    { href: "/", label: "Home" },
+    { href: "/about/", label: "About Mike" },
+    { href: "/services/", label: "All Services" },
+    { href: "/portfolio/", label: "Our Work" },
+    { href: "/testimonials/", label: "Reviews" },
+    { href: "/guarantee/", label: "Our Guarantee" },
+    { href: "/contact/", label: "Contact Us" },
+];
+
+const topServices = services.slice(0, 6);
+const topCities = locations.counties[0].cities.slice(0, 6);
+---
+
+<footer class="footer">
+    <div class="container">
+        <div class="footer__grid">
+            <!-- Brand Column -->
+            <div>
+                <div class="footer__brand">🔧 Mike's Handyman</div>
+                <p class="footer__about">
+                    {businessInfo.about.short}
+                </p>
+                <div style="margin-top: 1.5rem;">
+                    <p style="margin-bottom: 0.5rem;">
+                        <strong>📞 Phone:</strong>
+                        <a
+                            href={getPhoneLink()}
+                            style="color: var(--color-accent);"
+                            >{businessInfo.phone}</a
+                        >
+                    </p>
+                    <p style="margin-bottom: 0.5rem;">
+                        <strong>📧 Email:</strong>
+                        <a
+                            href={getEmailLink()}
+                            style="color: var(--color-accent);"
+                            >{businessInfo.email}</a
+                        >
+                    </p>
+                    <p style="margin-bottom: 0;">
+                        <strong>📍 Address:</strong>
+                        {businessInfo.address.full}
+                    </p>
+                </div>
+            </div>
+
+            <!-- Quick Links -->
+            <div>
+                <h4 class="footer__title">Quick Links</h4>
+                <ul class="footer__list">
+                    {
+                        quickLinks.map((link) => (
+                            <li>
+                                <a href={link.href} class="footer__link">
+                                    {link.label}
+                                </a>
+                            </li>
+                        ))
+                    }
+                </ul>
+            </div>
+
+            <!-- Services -->
+            <div>
+                <h4 class="footer__title">Services</h4>
+                <ul class="footer__list">
+                    {
+                        topServices.map((service) => (
+                            <li>
+                                <a
+                                    href={`/services/${service.slug}/`}
+                                    class="footer__link"
+                                >
+                                    {service.shortTitle}
+                                </a>
+                            </li>
+                        ))
+                    }
+                    <li>
+                        <a
+                            href="/services/"
+                            class="footer__link"
+                            style="color: var(--color-accent);"
+                        >
+                            View All Services →
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Service Areas -->
+            <div>
+                <h4 class="footer__title">Service Areas</h4>
+                <ul class="footer__list">
+                    {
+                        topCities.map((city) => (
+                            <li>
+                                <a href={`/${city.slug}/`} class="footer__link">
+                                    {city.name}
+                                </a>
+                            </li>
+                        ))
+                    }
+                    <li>
+                        <a
+                            href="/service-areas/"
+                            class="footer__link"
+                            style="color: var(--color-accent);"
+                        >
+                            View All Areas →
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Business Hours -->
+        <div
+            style="text-align: center; margin-bottom: 2rem; padding: 1.5rem; background: rgba(255,255,255,0.05); border-radius: 0.75rem;"
+        >
+            <p style="margin: 0; color: var(--color-gray-300);">
+                <strong>🕐 Business Hours:</strong>
+                {businessInfo.hours.days}, {businessInfo.hours.time}
+            </p>
+        </div>
+
+        <!-- Bottom -->
+        <div class="footer__bottom">
+            <p>© {currentYear} {businessInfo.name}. All rights reserved.</p>
+            <p style="margin-top: 0.5rem;">
+                Serving Charlotte, NC and surrounding areas within a 50-mile
+                radius.
+            </p>
+            <p style="margin-top: 1rem; font-size: 0.875rem;">
+                <a
+                    href="/privacy/"
+                    style="color: var(--color-gray-400); text-decoration: underline;"
+                    >Privacy Policy</a
+                >
+                {" • "}
+                <a
+                    href="/terms/"
+                    style="color: var(--color-gray-400); text-decoration: underline;"
+                    >Terms of Use</a
+                >
+            </p>
+        </div>
+    </div>
+</footer>

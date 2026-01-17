@@ -1,0 +1,429 @@
+---
+import { businessInfo } from "../data/business.js";
+import { services } from "../data/services.js";
+---
+
+<!-- Quote Modal -->
+<div id="quote-modal" class="modal">
+    <div class="modal__overlay" id="modal-overlay"></div>
+    <div class="modal__content">
+        <button class="modal__close" id="modal-close" aria-label="Close modal"
+            >×</button
+        >
+
+        <h2 class="modal__title">Get Your Free Quote</h2>
+        <p class="modal__subtitle">
+            Fill out the form and I'll get back to you shortly.
+        </p>
+
+        <form id="quote-form" class="modal__form">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="modal-name" class="form-label">Name *</label>
+                    <input
+                        type="text"
+                        id="modal-name"
+                        name="name"
+                        class="form-input"
+                        required
+                        placeholder="John Smith"
+                    />
+                </div>
+
+                <div class="form-group">
+                    <label for="modal-phone" class="form-label">Phone *</label>
+                    <input
+                        type="tel"
+                        id="modal-phone"
+                        name="phone"
+                        class="form-input"
+                        required
+                        placeholder="(704) 555-0123"
+                    />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="modal-email" class="form-label">Email</label>
+                <input
+                    type="email"
+                    id="modal-email"
+                    name="email"
+                    class="form-input"
+                    placeholder="john@example.com"
+                />
+            </div>
+
+            <div class="form-group">
+                <label for="modal-service" class="form-label"
+                    >Service Needed</label
+                >
+                <select id="modal-service" name="service" class="form-select">
+                    <option value="">Select a service...</option>
+                    {
+                        services.map((s) => (
+                            <option value={s.slug}>{s.title}</option>
+                        ))
+                    }
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="modal-message" class="form-label"
+                    >Project Details *</label
+                >
+                <textarea
+                    id="modal-message"
+                    name="message"
+                    class="form-textarea"
+                    rows="4"
+                    required
+                    placeholder="Tell me about your project..."></textarea>
+            </div>
+
+            <!-- Consent Checkbox -->
+            <div class="form-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" name="consent" required />
+                    <span>
+                        I agree to the <a href="/privacy/" target="_blank"
+                            >Privacy Policy</a
+                        > and
+                        <a href="/terms/" target="_blank">Terms of Use</a>. I
+                        consent to being contacted.
+                    </span>
+                </label>
+            </div>
+
+            <!-- Honeypot -->
+            <input
+                type="text"
+                name="website"
+                style="display: none;"
+                tabindex="-1"
+                autocomplete="off"
+            />
+
+            <button
+                type="submit"
+                class="btn btn--primary btn--lg modal__submit"
+            >
+                Submit Request
+            </button>
+
+            <p class="modal__footer-text">
+                Or call directly: <a href={`tel:+1${businessInfo.phoneRaw}`}
+                    >{businessInfo.phone}</a
+                >
+            </p>
+        </form>
+
+        <div id="modal-success" class="modal__success" style="display: none;">
+            <div class="success-icon">✓</div>
+            <h3>Request Received!</h3>
+            <p>Thanks for reaching out. I'll get back to you shortly.</p>
+            <button class="btn btn--primary" id="success-close">Close</button>
+        </div>
+    </div>
+</div>
+
+<style>
+    .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 9999;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+    }
+
+    .modal.modal--open {
+        display: flex;
+    }
+
+    .modal__overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(4px);
+    }
+
+    .modal__content {
+        position: relative;
+        background: white;
+        border-radius: 1rem;
+        max-width: 500px;
+        width: 100%;
+        max-height: 90vh;
+        overflow-y: auto;
+        padding: 2rem;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .modal__close {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 50%;
+        border: none;
+        background: var(--color-gray-100);
+        color: var(--color-gray-600);
+        font-size: 1.5rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+    }
+
+    .modal__close:hover {
+        background: var(--color-gray-200);
+        color: var(--color-gray-900);
+    }
+
+    .modal__title {
+        margin: 0 0 0.5rem;
+        font-size: 1.75rem;
+        color: var(--color-primary);
+    }
+
+    .modal__subtitle {
+        margin: 0 0 1.5rem;
+        color: var(--color-gray-600);
+    }
+
+    .modal__form {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .form-row {
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    @media (max-width: 640px) {
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .checkbox-label {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+        line-height: 1.6;
+        color: var(--color-gray-700);
+        cursor: pointer;
+    }
+
+    .checkbox-label input[type="checkbox"] {
+        margin-top: 0.25rem;
+        flex-shrink: 0;
+        cursor: pointer;
+    }
+
+    .checkbox-label a {
+        color: var(--color-accent);
+        text-decoration: underline;
+    }
+
+    .modal__submit {
+        width: 100%;
+        margin-top: 0.5rem;
+    }
+
+    .modal__footer-text {
+        text-align: center;
+        font-size: 0.875rem;
+        color: var(--color-gray-500);
+        margin: 0.5rem 0 0;
+    }
+
+    .modal__footer-text a {
+        color: var(--color-accent);
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    .modal__success {
+        text-align: center;
+        padding: 2rem 0;
+    }
+
+    .success-icon {
+        width: 4rem;
+        height: 4rem;
+        border-radius: 50%;
+        background: var(--color-success);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        margin: 0 auto 1.5rem;
+    }
+
+    .modal__success h3 {
+        color: var(--color-primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .modal__success p {
+        color: var(--color-gray-600);
+        margin-bottom: 1.5rem;
+    }
+</style>
+
+<script>
+    // Modal functionality
+    const modal = document.getElementById("quote-modal");
+    const modalOverlay = document.getElementById("modal-overlay");
+    const modalClose = document.getElementById("modal-close");
+    const quoteForm = document.getElementById("quote-form");
+    const modalSuccess = document.getElementById("modal-success");
+    const successClose = document.getElementById("success-close");
+
+    function openModal() {
+        modal?.classList.add("modal--open");
+        document.body.style.overflow = "hidden";
+    }
+
+    function closeModal() {
+        modal?.classList.remove("modal--open");
+        document.body.style.overflow = "";
+
+        // Reset form after closing
+        setTimeout(() => {
+            quoteForm?.reset();
+            if (quoteForm) quoteForm.style.display = "flex";
+            if (modalSuccess) modalSuccess.style.display = "none";
+        }, 300);
+    }
+
+    // Open modal when clicking any "Get Free Quote" button
+    document.addEventListener("click", (e) => {
+        const target = e.target as HTMLElement;
+        // Check if clicked element or parent is a quote button
+        const quoteBtn = target.closest(
+            '.hero__quote-btn, .btn[href="/contact/"]',
+        );
+        if (quoteBtn && quoteBtn.getAttribute("href") === "/contact/") {
+            e.preventDefault();
+            openModal();
+        }
+    });
+
+    // Close modal handlers
+    modalClose?.addEventListener("click", closeModal);
+    modalOverlay?.addEventListener("click", closeModal);
+    successClose?.addEventListener("click", closeModal);
+
+    // ESC key to close
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && modal?.classList.contains("modal--open")) {
+            closeModal();
+        }
+    });
+
+    // Form submission
+    quoteForm?.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(quoteForm as HTMLFormElement);
+
+        // Honeypot check
+        if (formData.get("website")) {
+            return; // Bot detected
+        }
+
+        const submitBtn = quoteForm.querySelector(
+            'button[type="submit"]',
+        ) as HTMLButtonElement;
+        const originalText = submitBtn?.textContent || "Submit Request";
+
+        try {
+            // Disable button
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = "Sending...";
+            }
+
+            // Prepare data for Telegram
+            const data = {
+                name: formData.get("name"),
+                phone: formData.get("phone"),
+                email: formData.get("email") || "Not provided",
+                service: formData.get("service") || "General Inquiry",
+                message: formData.get("message"),
+                source: "Quote Modal",
+            };
+
+            // Send to Telegram via Netlify function
+            const response = await fetch("/.netlify/functions/send-telegram", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            });
+
+            if (response.ok) {
+                // Track successful form submission
+                if (typeof window.trackFormSubmission === "function") {
+                    window.trackFormSubmission("quote_modal", data);
+                }
+                if (typeof window.trackQuoteSuccess === "function") {
+                    window.trackQuoteSuccess();
+                }
+
+                // Show success message
+                if (quoteForm) quoteForm.style.display = "none";
+                if (modalSuccess) modalSuccess.style.display = "block";
+            } else {
+                throw new Error("Failed to send message");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            alert(
+                "Sorry, there was an error sending your request. Please call us directly at (704) 111-1111",
+            );
+
+            // Reset button
+            if (submitBtn) {
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }
+        }
+    });
+
+    // Re-initialize after Astro page transitions
+    document.addEventListener("astro:page-load", () => {
+        // Modal might need re-initialization
+    });
+</script>

@@ -1,0 +1,225 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import Hero from "../../../components/Hero.astro";
+import ServiceCard from "../../../components/ServiceCard.astro";
+import TestimonialCard from "../../../components/TestimonialCard.astro";
+import CTASection from "../../../components/CTASection.astro";
+import {
+    getAllZipCodes,
+    getCityBySlug,
+    getZipType,
+} from "../../../data/locations.js";
+import { services } from "../../../data/services.js";
+import {
+    getTestimonialsByService,
+    getAllTestimonials,
+} from "../../../data/testimonials.js";
+import {
+    getIntroText,
+    getFAQs,
+    getOrderedServices,
+} from "../../../data/zipTemplates.js";
+import { businessInfo } from "../../../data/business.js";
+
+export async function getStaticPaths() {
+    const allZips = getAllZipCodes();
+
+    return allZips.map((zip) => ({
+        params: {
+            city: zip.citySlug,
+            zipcode: zip.code,
+        },
+        props: {
+            zipData: zip,
+        },
+    }));
+}
+
+const { zipData } = Astro.props;
+const { city, zipcode } = Astro.params;
+
+const cityData = getCityBySlug(city);
+
+// Safety check - if no city data or it's a neighborhood, redirect or show error
+if (!cityData || cityData.isNeighborhood || !cityData.zipDetails) {
+    return Astro.redirect("/service-areas/");
+}
+
+const zipType = getZipType(city, zipcode);
+const zipDetail = cityData.zipDetails.find((z) => z.code === zipcode);
+
+// If ZIP not found in this city, redirect
+if (!zipDetail) {
+    return Astro.redirect(`/${city}/`);
+}
+
+// Get content based on housing type
+const introText = getIntroText(zipType, zipcode, zipDetail?.area, zipData.city);
+const faqs = getFAQs(zipType);
+const orderedServices = getOrderedServices(zipType, services);
+
+// Filter testimonials by location
+const allTestimonials = getAllTestimonials();
+const locationTestimonials = allTestimonials
+    .filter(
+        (t) =>
+            t.zipCode === zipcode ||
+            t.city === city ||
+            t.county === zipData.countySlug,
+    )
+    .slice(0, 3);
+
+const pageTitle = `Handyman Services in ZIP ${zipcode}, ${zipData.city}, NC`;
+const metaDescription = `Professional handyman in ZIP ${zipcode}, ${zipData.city}, NC. ${services
+    .slice(0, 5)
+    .map((s) => s.shortTitle)
+    .join(", ")} and more. Call ${businessInfo.phone} for a free quote.`;
+---
+
+<BaseLayout
+    title={pageTitle}
+    description={metaDescription}
+    canonical={`/${city}/zip/${zipcode}/`}
+>
+    <!-- Hero Section with ZIP Location -->
+    <Hero
+        title={`Handyman Services in ZIP ${zipcode}`}
+        subtitle={`${zipDetail.area}, ${zipData.city}, North Carolina`}
+    />
+
+    <!-- Intro Section with Unique Content -->
+    <section class="section">
+        <div class="container">
+            <div class="section__header">
+                <span class="section__label">Your Local Handyman</span>
+                <h2 class="section__title">
+                    Trusted Service in {zipDetail.area}
+                </h2>
+            </div>
+
+            <div style="max-width: 800px; margin: 0 auto; text-align: center;">
+                <p
+                    style="font-size: 1.125rem; line-height: 1.8; color: var(--color-gray-700);"
+                >
+                    {introText}
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Grid -->
+    <section class="section bg-gray">
+        <div class="container">
+            <div class="section__header">
+                <span class="section__label">What We Do</span>
+                <h2 class="section__title">Our Services in ZIP {zipcode}</h2>
+                <p class="section__subtitle">
+                    From small repairs to major installations, serving {
+                        zipDetail.area
+                    } with expertise and care.
+                </p>
+            </div>
+
+            <div class="grid grid--3">
+                {
+                    orderedServices.map((service) => (
+                        <ServiceCard
+                            slug={service.slug}
+                            fullPath={`/${city}/zip/${zipcode}/${service.slug}/`}
+                            icon={service.icon}
+                            title={service.title}
+                            shortTitle={service.shortTitle}
+                            description={service.description}
+                        />
+                    ))
+                }
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    {
+        faqs.length > 0 && (
+            <section class="section">
+                <div class="container">
+                    <div class="section__header">
+                        <span class="section__label">Questions</span>
+                        <h2 class="section__title">
+                            Frequently Asked Questions
+                        </h2>
+                        <p class="section__subtitle">
+                            Common questions from {zipDetail.area} residents
+                        </p>
+                    </div>
+
+                    <div style="max-width: 800px; margin: 0 auto;">
+                        <div style="display: grid; gap: 1.5rem;">
+                            {faqs.map((faq) => (
+                                <div class="card" style="padding: 1.5rem;">
+                                    <h3 style="font-size: 1.125rem; margin-bottom: 0.75rem; color: var(--color-primary);">
+                                        {faq.question}
+                                    </h3>
+                                    <p style="margin: 0; color: var(--color-gray-700); line-height: 1.7;">
+                                        {faq.answer}
+                                    </p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </section>
+        )
+    }
+
+    <!-- Testimonials -->
+    {
+        locationTestimonials.length > 0 && (
+            <section class="section bg-gray">
+                <div class="container">
+                    <div class="section__header">
+                        <span class="section__label">Reviews</span>
+                        <h2 class="section__title">What Our Clients Say</h2>
+                        <p class="section__subtitle">
+                            Real reviews from satisfied customers in{" "}
+                            {zipDetail.area}
+                        </p>
+                    </div>
+
+                    <div class="grid grid--2">
+                        {locationTestimonials.map((t) => (
+                            <TestimonialCard
+                                name={t.name}
+                                date={t.date}
+                                rating={t.rating}
+                                text={t.text}
+                                tags={t.tags}
+                                showImages={true}
+                                images={t.images}
+                                folder={t.folder}
+                            />
+                        ))}
+                    </div>
+                </div>
+            </section>
+        )
+    }
+
+    <!-- Service Area Note -->
+    <section class="section">
+        <div class="container">
+            <p
+                style="text-align: center; font-size: 0.875rem; color: var(--color-gray-500);"
+            >
+                Serving all of ZIP {zipcode} and surrounding areas in {
+                    zipData.city
+                }, NC
+            </p>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <CTASection
+        title={`Need a Handyman in ZIP ${zipcode}?`}
+        subtitle="Call now for a free quote. Same-day service often available."
+    />
+</BaseLayout>

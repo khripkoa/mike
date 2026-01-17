@@ -1,0 +1,340 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import CTASection from "../components/CTASection.astro";
+import { getAllTestimonials } from "../data/testimonials.js";
+
+const portfolioItems = [
+    {
+        title: "Kitchen Cabinet Hardware",
+        description:
+            "Installed knobs and pulls on freshly painted kitchen cabinets. Clean, professional results.",
+        image: "3.webp",
+        category: "Cabinets",
+    },
+    {
+        title: "Door Repair & Adjustment",
+        description:
+            "Fixed sticky doors and installed new doorknobs. Smooth operation guaranteed.",
+        image: "12.webp",
+        category: "Doors",
+    },
+    {
+        title: "General Repairs",
+        description: "Various home repairs and maintenance tasks completed.",
+        image: "17.webp",
+        category: "Repairs",
+    },
+    {
+        title: "Chandelier Installation",
+        description:
+            "Installed a beautiful chandelier above stairs with additional lighting.",
+        image: "inessa-m-1.webp",
+        category: "Lighting",
+    },
+    {
+        title: "Picture & Mirror Hanging",
+        description: "Hung pictures and mirrors perfectly level and secure.",
+        image: "daria-k-5.png",
+        category: "Hanging",
+    },
+    {
+        title: "Furniture Assembly",
+        description:
+            "Professional assembly of couch and other furniture. Solid and stable.",
+        image: "anastasia-z-1.webp",
+        category: "Assembly",
+    },
+    {
+        title: "Built-in Bar Area",
+        description:
+            "Custom built-in bar with cabinets, shelving, and electrical work.",
+        image: "chloe-r-1.webp",
+        category: "Cabinets",
+    },
+    {
+        title: "Appliance Repair",
+        description: "Fixed garbage disposal and replaced water filters.",
+        image: "2200.webp",
+        category: "Appliances",
+    },
+    {
+        title: "Bathroom Caulking",
+        description:
+            "Professional caulking around tub. Clean lines, watertight seal.",
+        image: "pam-m-2200.webp",
+        category: "Maintenance",
+    },
+];
+---
+
+<style>
+    .personalized-header-wrapper {
+        position: relative;
+        margin-top: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    .header-title-centered {
+        text-align: center;
+    }
+    .header-title-centered h1 {
+        margin: 0 0 0.5rem;
+        font-size: 1.75rem;
+        color: white;
+    }
+    .header-title-centered p {
+        margin: 0;
+        color: rgba(255, 255, 255, 0.85);
+        font-size: 0.95rem;
+    }
+    .mike-section {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        max-width: 360px;
+        margin-top: 1.5rem;
+    }
+    @media (min-width: 768px) {
+        .header-title-centered {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 0;
+            z-index: 2;
+        }
+        .header-title-centered h1 {
+            font-size: 2rem;
+        }
+        .header-title-centered p {
+            font-size: 1rem;
+        }
+        .mike-section {
+            position: relative;
+            z-index: 1;
+            margin-top: 0;
+        }
+    }
+</style>
+
+<BaseLayout
+    title="Our Work - Portfolio | Charlotte, NC"
+    description="See examples of Mike's handyman work in Charlotte, NC. Real photos from real projects. Before & after shots and customer reviews."
+    canonical="/portfolio/"
+>
+    <!-- Page Header -->
+    <section
+        class="page-header"
+        style="padding: 2rem 0; background: linear-gradient(135deg, #1e3a5f 0%, #2c5282 100%); position: relative; overflow: hidden;"
+    >
+        <div class="container">
+            <nav class="breadcrumb" style="filter: brightness(2);">
+                <a href="/">Home</a>
+                <span>/</span>
+                <span>Portfolio</span>
+            </nav>
+
+            <div class="personalized-header-wrapper">
+                <div class="header-title-centered">
+                    <h1>Our Work</h1>
+                    <p>Real projects from real Charlotte homes</p>
+                </div>
+
+                <div class="mike-section">
+                    <div
+                        style="position: relative; width: 80px; height: 80px; flex-shrink: 0;"
+                    >
+                        <img
+                            src="/images/mike-hero.webp"
+                            alt="Mike"
+                            style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);"
+                        />
+                        <div
+                            style="position: absolute; bottom: -6px; right: -6px; background: var(--color-accent); color: white; padding: 0.2rem 0.4rem; border-radius: 3px; font-size: 0.7rem; font-weight: 600; box-shadow: 0 2px 8px rgba(0,0,0,0.2);"
+                        >
+                            ⭐ Pro
+                        </div>
+                    </div>
+                    <p
+                        style="margin: 0; color: rgba(255,255,255,0.9); font-size: 0.85rem; line-height: 1.3; text-align: left;"
+                    >
+                        <strong style="color: var(--color-accent);"
+                            >Mike here.</strong
+                        > These are real projects I've completed. Proud of every single
+                        one.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Stats -->
+    <section class="section bg-gray">
+        <div class="container">
+            <div
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 2rem; text-align: center;"
+            >
+                <div>
+                    <div
+                        style="font-size: 3rem; font-weight: 800; color: var(--color-accent);"
+                    >
+                        32+
+                    </div>
+                    <div style="color: var(--color-gray-600);">
+                        Projects Completed
+                    </div>
+                </div>
+                <div>
+                    <div
+                        style="font-size: 3rem; font-weight: 800; color: var(--color-primary);"
+                    >
+                        7+
+                    </div>
+                    <div style="color: var(--color-gray-600);">
+                        Years Experience
+                    </div>
+                </div>
+                <div>
+                    <div
+                        style="font-size: 3rem; font-weight: 800; color: var(--color-success);"
+                    >
+                        100%
+                    </div>
+                    <div style="color: var(--color-gray-600);">
+                        Satisfaction
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Grid -->
+    <section class="section section--lg">
+        <div class="container">
+            <div class="portfolio-grid">
+                {
+                    portfolioItems.map((item, index) => (
+                        <article class="portfolio-card">
+                            <div class="portfolio-card__image-wrapper">
+                                <img
+                                    src={`/images/portfolio/${item.image}`}
+                                    alt={item.title}
+                                    class="portfolio-card__image"
+                                    loading={index < 3 ? "eager" : "lazy"}
+                                    width="400"
+                                    height="300"
+                                />
+                                <span class="portfolio-card__category">
+                                    {item.category}
+                                </span>
+                            </div>
+                            <div class="portfolio-card__content">
+                                <h3 class="portfolio-card__title">
+                                    {item.title}
+                                </h3>
+                                <p class="portfolio-card__text">
+                                    {item.description}
+                                </p>
+                            </div>
+                        </article>
+                    ))
+                }
+            </div>
+
+            <div style="text-align: center; margin-top: 3rem;">
+                <p style="color: var(--color-gray-600); margin-bottom: 1rem;">
+                    Want to see more? Check out our customer reviews with
+                    additional photos.
+                </p>
+                <a href="/testimonials/" class="btn btn--secondary btn--lg">
+                    Read Reviews with Photos →
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <CTASection
+        title="Ready to Start Your Project?"
+        subtitle="Let's add your home to our portfolio of happy customers."
+    />
+</BaseLayout>
+
+<style>
+    .portfolio-grid {
+        display: grid;
+        gap: 2rem;
+        grid-template-columns: 1fr;
+    }
+
+    @media (min-width: 640px) {
+        .portfolio-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (min-width: 1024px) {
+        .portfolio-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    .portfolio-card {
+        background: white;
+        border-radius: 1rem;
+        overflow: hidden;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        transition: all 0.25s ease;
+    }
+
+    .portfolio-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    .portfolio-card__image-wrapper {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .portfolio-card__image {
+        width: 100%;
+        height: auto;
+        min-height: 220px;
+        max-height: 400px;
+        object-fit: contain;
+        background: #f5f5f5;
+        transition: transform 0.3s ease;
+    }
+
+    .portfolio-card:hover .portfolio-card__image {
+        transform: scale(1.05);
+    }
+
+    .portfolio-card__category {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: var(--color-accent);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .portfolio-card__content {
+        padding: 1.5rem;
+    }
+
+    .portfolio-card__title {
+        font-size: 1.125rem;
+        margin: 0 0 0.5rem 0;
+    }
+
+    .portfolio-card__text {
+        color: var(--color-gray-600);
+        font-size: 0.95rem;
+        margin: 0;
+        line-height: 1.5;
+    }
+</style>

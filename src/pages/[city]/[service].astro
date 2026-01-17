@@ -1,0 +1,376 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ServiceHero from "../../components/ServiceHero.astro";
+import CTASection from "../../components/CTASection.astro";
+import TestimonialCard from "../../components/TestimonialCard.astro";
+import { services, getServiceBySlug } from "../../data/services.js";
+import {
+    getAllCities,
+    getAllNeighborhoods,
+    getCityBySlug,
+} from "../../data/locations.js";
+import { getTestimonialsByService } from "../../data/testimonials.js";
+import { businessInfo, getPhoneLink } from "../../data/business.js";
+
+export function getStaticPaths() {
+    const cities = getAllCities();
+    const neighborhoods = getAllNeighborhoods();
+    const allLocations = [
+        ...cities.map((c) => ({ ...c, isNeighborhood: false })),
+        ...neighborhoods.map((n) => ({ ...n, isNeighborhood: true })),
+    ];
+
+    const paths = [];
+
+    allLocations.forEach((location) => {
+        services.forEach((service) => {
+            paths.push({
+                params: {
+                    city: location.slug,
+                    service: service.slug,
+                },
+                props: {
+                    location,
+                    service,
+                    isNeighborhood: location.isNeighborhood,
+                },
+            });
+        });
+    });
+
+    return paths;
+}
+
+const { location, service, isNeighborhood } = Astro.props;
+const testimonials = getTestimonialsByService(service.slug);
+const locationName = location.name;
+const pageTitle = `${service.title} in ${locationName}`;
+
+const schemaData = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: pageTitle,
+    description: `Professional ${service.title.toLowerCase()} services in ${locationName}. ${service.metaDescription}`,
+    provider: {
+        "@type": "LocalBusiness",
+        name: businessInfo.name,
+        telephone: businessInfo.phone,
+        email: businessInfo.email,
+        address: {
+            "@type": "PostalAddress",
+            addressLocality: "Charlotte",
+            addressRegion: "NC",
+            addressCountry: "US",
+        },
+    },
+    areaServed: {
+        "@type": isNeighborhood ? "Neighborhood" : "City",
+        name: locationName,
+    },
+    serviceType: service.title,
+};
+---
+
+<BaseLayout
+    title={pageTitle}
+    description={`Need ${service.title.toLowerCase()} in ${locationName}? Mike's Handyman offers professional ${service.shortTitle.toLowerCase()} services. 7+ years experience, top-rated, background checked. Call ${businessInfo.phone}.`}
+    canonical={`/${location.slug}/${service.slug}/`}
+    structuredData={schemaData}
+>
+    <!-- Service Hero -->
+    <ServiceHero
+        title={pageTitle}
+        subtitle={`Professional ${service.shortTitle.toLowerCase()} services in ${locationName}. I know the area well and deliver quality work you can trust.`}
+        badge={`${service.icon} ${locationName} ${service.shortTitle} Expert`}
+    />
+
+    <!-- Service Description -->
+    <section class="section" style="padding: 2rem 0 3rem 0;">
+        <div class="container">
+            <p
+                style="font-size: 1.125rem; line-height: 1.8; color: var(--color-gray-700); max-width: 800px; margin: 0 auto; text-align: center;"
+            >
+                Professional {service.title.toLowerCase()} services in {
+                    locationName
+                }. {service.description}
+            </p>
+        </div>
+    </section>
+
+    <!-- Service Details -->
+    <section class="section section--lg">
+        <div class="container">
+            <div
+                style="display: grid; gap: 4rem; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));"
+            >
+                <!-- Main Content -->
+                <div>
+                    <h2 style="margin-bottom: 1.5rem;">
+                        Professional {service.title} in {locationName}
+                    </h2>
+
+                    <p
+                        style="font-size: 1.125rem; line-height: 1.8; margin-bottom: 1.5rem;"
+                    >
+                        Looking for reliable {service.title.toLowerCase()} in {
+                            locationName
+                        }? Mike's Handyman Services is your trusted local
+                        choice. With over 7 years of hands-on experience, we
+                        deliver quality workmanship and exceptional service to
+                        homeowners throughout the {locationName} area.
+                    </p>
+
+                    <p
+                        style="font-size: 1.125rem; line-height: 1.8; margin-bottom: 2rem;"
+                    >
+                        {service.description}
+                    </p>
+
+                    <h3 style="margin-bottom: 1rem;">
+                        Our {service.shortTitle} Services in {locationName}:
+                    </h3>
+                    <ul
+                        style="list-style: none; display: grid; gap: 0.75rem; margin-bottom: 2rem;"
+                    >
+                        {
+                            service.services.map((s) => (
+                                <li style="display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 0;">
+                                    <span style="color: var(--color-success); font-weight: bold; font-size: 1.25rem;">
+                                        ✓
+                                    </span>
+                                    <span style="font-size: 1.05rem;">{s}</span>
+                                </li>
+                            ))
+                        }
+                    </ul>
+
+                    <!-- Why Choose Us -->
+                    <h3 style="margin-bottom: 1rem;">
+                        Why {locationName} Residents Choose Us
+                    </h3>
+                    <div style="display: grid; gap: 1rem;">
+                        <div
+                            style="display: flex; gap: 1rem; align-items: flex-start;"
+                        >
+                            <span style="font-size: 1.5rem;">⭐</span>
+                            <div>
+                                <strong>Top-Rated Pro</strong>
+                                <p
+                                    style="margin: 0.25rem 0 0; color: var(--color-gray-600);"
+                                >
+                                    Consistently rated 5 stars by {locationName}
+                                    homeowners.
+                                </p>
+                            </div>
+                        </div>
+                        <div
+                            style="display: flex; gap: 1rem; align-items: flex-start;"
+                        >
+                            <span style="font-size: 1.5rem;">🛡️</span>
+                            <div>
+                                <strong>Background Checked</strong>
+                                <p
+                                    style="margin: 0.25rem 0 0; color: var(--color-gray-600);"
+                                >
+                                    Fully vetted for your peace of mind and
+                                    security.
+                                </p>
+                            </div>
+                        </div>
+                        <div
+                            style="display: flex; gap: 1rem; align-items: flex-start;"
+                        >
+                            <span style="font-size: 1.5rem;">💰</span>
+                            <div>
+                                <strong>Fair, Upfront Pricing</strong>
+                                <p
+                                    style="margin: 0.25rem 0 0; color: var(--color-gray-600);"
+                                >
+                                    No hidden fees. Get a clear quote before we
+                                    start.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar CTA -->
+                <div>
+                    <div
+                        class="card"
+                        style="padding: 2rem; border: 2px solid var(--color-accent); position: sticky; top: 100px;"
+                    >
+                        <h3 style="text-align: center; margin-bottom: 0.5rem;">
+                            Get a Free Quote
+                        </h3>
+                        <p
+                            style="text-align: center; color: var(--color-gray-600); margin-bottom: 1.5rem; font-size: 0.95rem;"
+                        >
+                            {service.title} in {locationName}
+                        </p>
+
+                        <a
+                            href={getPhoneLink()}
+                            class="btn btn--primary btn--xl"
+                            style="width: 100%; margin-bottom: 1rem;"
+                        >
+                            <span>📞</span>
+                            <span>{businessInfo.phone}</span>
+                        </a>
+
+                        <p
+                            style="text-align: center; font-size: 0.875rem; color: var(--color-gray-500); margin-bottom: 1.5rem;"
+                        >
+                            {businessInfo.hours.days}, {businessInfo.hours.time}
+                        </p>
+
+                        <a
+                            href="/contact/"
+                            class="btn btn--secondary"
+                            style="width: 100%;"
+                        >
+                            Request Quote Online
+                        </a>
+
+                        <!-- Trust Signals -->
+                        <div
+                            style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--color-gray-200);"
+                        >
+                            <div
+                                style="display: grid; gap: 0.75rem; font-size: 0.9rem;"
+                            >
+                                <div
+                                    style="display: flex; align-items: center; gap: 0.75rem;"
+                                >
+                                    <span style="color: var(--color-success);"
+                                        >✓</span
+                                    >
+                                    <span>7+ Years Experience</span>
+                                </div>
+                                <div
+                                    style="display: flex; align-items: center; gap: 0.75rem;"
+                                >
+                                    <span style="color: var(--color-success);"
+                                        >✓</span
+                                    >
+                                    <span>Top Pro Status</span>
+                                </div>
+                                <div
+                                    style="display: flex; align-items: center; gap: 0.75rem;"
+                                >
+                                    <span style="color: var(--color-success);"
+                                        >✓</span
+                                    >
+                                    <span>Background Checked</span>
+                                </div>
+                                <div
+                                    style="display: flex; align-items: center; gap: 0.75rem;"
+                                >
+                                    <span style="color: var(--color-success);"
+                                        >✓</span
+                                    >
+                                    <span>Serving {locationName}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    {
+        testimonials.length > 0 && (
+            <section class="section bg-gray">
+                <div class="container">
+                    <h2 style="text-align: center; margin-bottom: 2rem;">
+                        What Customers Say About Our {service.shortTitle} Work
+                    </h2>
+                    <div class="grid grid--2">
+                        {testimonials.slice(0, 2).map((t) => (
+                            <TestimonialCard
+                                name={t.name}
+                                date={t.date}
+                                rating={t.rating}
+                                text={t.text}
+                                tags={t.tags}
+                            />
+                        ))}
+                    </div>
+                    <div style="text-align: center; margin-top: 2rem;">
+                        <a href="/testimonials/" class="btn btn--secondary">
+                            Read All Reviews →
+                        </a>
+                    </div>
+                </div>
+            </section>
+        )
+    }
+
+    <!-- Related Services -->
+    <section class="section">
+        <div class="container">
+            <h2 style="text-align: center; margin-bottom: 1rem;">
+                Other Services in {locationName}
+            </h2>
+            <p
+                style="text-align: center; color: var(--color-gray-600); margin-bottom: 2rem;"
+            >
+                We offer a full range of handyman services:
+            </p>
+
+            <div
+                style="display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center;"
+            >
+                {
+                    services
+                        .filter((s) => s.slug !== service.slug)
+                        .slice(0, 8)
+                        .map((s) => (
+                            <a
+                                href={`/${location.slug}/${s.slug}/`}
+                                class="badge badge--primary"
+                                style="padding: 0.5rem 1rem;"
+                            >
+                                {s.icon} {s.shortTitle}
+                            </a>
+                        ))
+                }
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <a
+                    href={`/${location.slug}/`}
+                    style="color: var(--color-accent); font-weight: 500;"
+                >
+                    View all services in {locationName} →
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Service Area Note -->
+    <section class="section bg-gray">
+        <div class="container" style="text-align: center;">
+            <p
+                style="font-size: 1rem; color: var(--color-gray-700); margin: 0;"
+            >
+                We proudly serve {locationName} and all surrounding areas within 50
+                miles of Charlotte, NC.
+                <a
+                    href="/service-areas/"
+                    style="color: var(--color-accent); font-weight: 500;"
+                >
+                    View all service areas →</a
+                >
+            </p>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <CTASection
+        title={`Ready for ${service.shortTitle} in ${locationName}?`}
+        subtitle="Get a free quote today. Available 7 days a week."
+    />
+</BaseLayout>

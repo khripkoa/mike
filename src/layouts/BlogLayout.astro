@@ -1,0 +1,265 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import "../styles/global.css";
+
+interface Props {
+    title: string;
+    description: string;
+    publishDate: string;
+    author?: string;
+    image?: string;
+    keywords?: string[];
+}
+
+const {
+    title,
+    description,
+    publishDate,
+    author = "Mike",
+    image = "/images/blog-default.webp",
+    keywords = [],
+} = Astro.props;
+
+const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: title,
+    description: description,
+    image: `https://mike-handyman.com${image}`,
+    datePublished: publishDate,
+    author: {
+        "@type": "Person",
+        name: author,
+    },
+    publisher: {
+        "@type": "Organization",
+        name: "Mike's Handyman Services",
+        logo: {
+            "@type": "ImageObject",
+            url: "https://mike-handyman.com/images/logo.png",
+        },
+    },
+};
+---
+
+<BaseLayout
+    title={title}
+    description={description}
+    ogImage={image}
+    structuredData={articleSchema}
+>
+    <article class="blog-article">
+        <div class="container" style="max-width: 800px; margin: 0 auto;">
+            <!-- Article Header -->
+            <header class="article-header">
+                <div class="article-meta">
+                    <time datetime={publishDate}
+                        >{
+                            new Date(publishDate).toLocaleDateString("en-US", {
+                                month: "long",
+                                day: "numeric",
+                                year: "numeric",
+                            })
+                        }</time
+                    >
+                    <span class="article-separator">•</span>
+                    <span>By {author}</span>
+                </div>
+                <h1 class="article-title">{title}</h1>
+                <p class="article-description">{description}</p>
+            </header>
+
+            <!-- Article Content -->
+            <div class="article-content">
+                <slot />
+            </div>
+
+            <!-- Author Byline -->
+            <div class="author-byline">
+                <img
+                    src="/images/mike-hero.webp"
+                    alt="Mike - Charlotte Handyman"
+                    class="author-byline__photo"
+                    width="80"
+                    height="80"
+                />
+                <div class="author-byline__info">
+                    <div class="author-byline__name">Written by {author}</div>
+                    <div class="author-byline__bio">
+                        Professional handyman with 7+ years of experience, now
+                        serving Charlotte, NC. Thumbtack Top Pro with 28
+                        five-star reviews.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Article Footer -->
+            <footer class="article-footer">
+                <div class="article-cta">
+                    <h3>Need handyman help in Charlotte?</h3>
+                    <p>
+                        Get a free quote for your project today. 7+ years of
+                        experience, top-rated service.
+                    </p>
+                    <div
+                        style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;"
+                    >
+                        <a href="/contact/" class="btn btn--primary"
+                            >Get Free Quote</a
+                        >
+                        <a href="tel:+17041111111" class="btn btn--secondary"
+                            >Call (704) 111-1111</a
+                        >
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </article>
+</BaseLayout>
+
+<style>
+    .blog-article {
+        padding: 4rem 0;
+    }
+
+    .article-header {
+        margin-bottom: 3rem;
+        text-align: center;
+    }
+
+    .article-meta {
+        color: var(--color-gray-600);
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+
+    .article-separator {
+        margin: 0 0.5rem;
+    }
+
+    .article-title {
+        font-size: 2.5rem;
+        line-height: 1.2;
+        margin-bottom: 1rem;
+        color: var(--color-gray-900);
+    }
+
+    @media (max-width: 768px) {
+        .article-title {
+            font-size: 2rem;
+        }
+    }
+
+    .article-description {
+        font-size: 1.25rem;
+        color: var(--color-gray-700);
+        line-height: 1.6;
+    }
+
+    .article-content {
+        font-size: 1.125rem;
+        line-height: 1.8;
+        color: var(--color-gray-800);
+    }
+
+    .article-content :global(h2) {
+        font-size: 1.75rem;
+        margin: 2.5rem 0 1rem;
+        color: var(--color-gray-900);
+    }
+
+    .article-content :global(h3) {
+        font-size: 1.4rem;
+        margin: 2rem 0 1rem;
+        color: var(--color-gray-900);
+    }
+
+    .article-content :global(p) {
+        margin-bottom: 1.5rem;
+    }
+
+    .article-content :global(ul),
+    .article-content :global(ol) {
+        margin: 1.5rem 0;
+        padding-left: 2rem;
+    }
+
+    .article-content :global(li) {
+        margin-bottom: 0.75rem;
+    }
+
+    .article-content :global(strong) {
+        color: var(--color-gray-900);
+        font-weight: 600;
+    }
+
+    .article-content :global(a) {
+        color: var(--color-accent);
+        text-decoration: underline;
+    }
+
+    .article-content :global(a:hover) {
+        color: var(--color-primary);
+    }
+
+    .author-byline {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        padding: 2rem;
+        background: var(--color-gray-50);
+        border-radius: 1rem;
+        margin-top: 3rem;
+        border-left: 4px solid var(--color-accent);
+    }
+
+    .author-byline__photo {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+        flex-shrink: 0;
+    }
+
+    .author-byline__name {
+        font-weight: 700;
+        font-size: 1.125rem;
+        color: var(--color-gray-900);
+        margin-bottom: 0.5rem;
+    }
+
+    .author-byline__bio {
+        color: var(--color-gray-700);
+        line-height: 1.6;
+    }
+
+    @media (max-width: 640px) {
+        .author-byline {
+            flex-direction: column;
+            text-align: center;
+        }
+    }
+
+    .article-footer {
+        margin-top: 4rem;
+        padding-top: 2rem;
+        border-top: 2px solid var(--color-gray-200);
+    }
+
+    .article-cta {
+        background: var(--color-gray-50);
+        padding: 2rem;
+        border-radius: 1rem;
+        text-align: center;
+    }
+
+    .article-cta h3 {
+        margin-bottom: 0.5rem;
+        color: var(--color-gray-900);
+    }
+
+    .article-cta p {
+        color: var(--color-gray-700);
+        margin-bottom: 1.5rem;
+    }
+</style>

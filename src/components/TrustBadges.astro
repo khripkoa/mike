@@ -1,0 +1,37 @@
+---
+import { businessInfo, getPhoneLink } from "../data/business.js";
+
+interface Props {
+    variant?: "light" | "dark";
+}
+
+const { variant = "light" } = Astro.props;
+
+const badges = [
+    { icon: "✓", text: "7+ Years Experience" },
+    { icon: "⭐", text: "Top Pro Status" },
+    { icon: "🛡️", text: "Background Checked" },
+    { icon: "📋", text: "32+ Jobs Completed" },
+];
+---
+
+<div
+    class="trust-badges"
+    style={variant === "dark" ? "justify-content: center;" : ""}
+>
+    {
+        badges.map((badge) => (
+            <div
+                class="trust-badge"
+                style={
+                    variant === "dark"
+                        ? "background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2);"
+                        : ""
+                }
+            >
+                <span class="trust-badge__icon">{badge.icon}</span>
+                <span>{badge.text}</span>
+            </div>
+        ))
+    }
+</div>
