@@ -477,16 +477,13 @@ import { services } from "../data/services.js";
                     source: window.location.pathname,
                 };
 
-                const response = await fetch(
-                    "/.netlify/functions/send-telegram",
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify(data),
+                const response = await fetch("/api/send-telegram", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
                     },
-                );
+                    body: JSON.stringify(data),
+                });
 
                 if (response.ok) {
                     // Track successful form submission

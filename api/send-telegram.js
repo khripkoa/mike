@@ -1,15 +1,11 @@
-exports.handler = async (event) => {
+export default async function handler(req, res) {
     // Only allow POST
-    if (event.httpMethod !== 'POST') {
-        return {
-            statusCode: 405,
-            body: JSON.stringify({ error: 'Method not allowed' })
-        };
+    if (req.method !== 'POST') {
+        return res.status(405).json({ error: 'Method not allowed' });
     }
 
     try {
-        const data = JSON.parse(event.body);
-        const { name, phone, email, service, message, source } = data;
+        const { name, phone, email, service, message, source } = req.body;
 
         // Telegram Bot configuration
         const botToken = process.env.TELEGRAM_BOT_TOKEN;
@@ -17,10 +13,7 @@ exports.handler = async (event) => {
 
         if (!botToken || !chatId) {
             console.error('Missing Telegram credentials');
-            return {
-                statusCode: 500,
-                body: JSON.stringify({ error: 'Server configuration error' })
-            };
+            return res.status(500).json({ error: 'Server configuration error' });
         }
 
         // Format message for Telegram
@@ -54,25 +47,16 @@ exports.handler = async (event) => {
 
         if (!response.ok) {
             console.error('Telegram API error:', result);
-            return {
-                statusCode: 500,
-                body: JSON.stringify({ error: 'Failed to send notification' })
-            };
+            return res.status(500).json({ error: 'Failed to send notification' });
         }
 
-        return {
-            statusCode: 200,
-            body: JSON.stringify({
-                success: true,
-                message: 'Message sent successfully'
-            })
-        };
+        return res.status(200).json({
+            success: true,
+            message: 'Message sent successfully'
+        });
 
     } catch (error) {
         console.error('Error:', error);
-        return {
-            statusCode: 500,
-            body: JSON.stringify({ error: 'Internal server error' })
-        };
+        return res.status(500).json({ error: 'Internal server error' });
     }
-};
+}
