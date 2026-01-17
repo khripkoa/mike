@@ -1,8 +1,8 @@
 export const businessInfo = {
     name: "Handy Mike",
     tagline: "Charlotte's Trusted Handyman",
-    phone: "(704) 111-1111",
-    phoneRaw: "7041111111",
+    phone: "(704) 352-0284",
+    phoneRaw: "7043520284",
     email: "mike@test.com",
     address: {
         street: "1313 GreyThorne Drive",
